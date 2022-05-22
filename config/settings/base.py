@@ -90,6 +90,8 @@ LOCAL_APPS = [
     "ksatria_muslim.users",
     # Your stuff: custom apps go here
     "ksatria_muslim.books",
+    "ksatria_muslim.children",
+    "ksatria_muslim.rewards",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
