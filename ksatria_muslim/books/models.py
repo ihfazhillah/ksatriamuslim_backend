@@ -10,9 +10,12 @@ class BookReference(TimeStampedModel):
 class Book(TimeStampedModel):
     title = models.CharField(max_length=255)
     cover = models.ImageField(upload_to="cover_books/")
-    reference_text_ar = models.TextField()
-    reference_text_id = models.TextField()
-    reference = models.ForeignKey(BookReference, on_delete=models.SET_NULL, null=True)
+
+    # we not used the reference text for the old books
+    reference_text_ar = models.TextField(null=True, blank=True)
+    reference_text_id = models.TextField(null=True, blank=True)
+    reference = models.ForeignKey(BookReference, on_delete=models.SET_NULL, null=True, blank=True)
+    reference_note = models.CharField(max_length=255, null=True, blank=True)
 
 
 def page_audio(instance, filename):
