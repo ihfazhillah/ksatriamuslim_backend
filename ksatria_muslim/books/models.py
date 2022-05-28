@@ -6,6 +6,9 @@ class BookReference(TimeStampedModel):
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.title
+
 
 class Book(TimeStampedModel):
     title = models.CharField(max_length=255)
@@ -16,6 +19,9 @@ class Book(TimeStampedModel):
     reference_text_id = models.TextField(null=True, blank=True)
     reference = models.ForeignKey(BookReference, on_delete=models.SET_NULL, null=True, blank=True)
     reference_note = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
 
 
 def page_audio(instance, filename):
