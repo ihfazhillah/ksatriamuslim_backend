@@ -18,5 +18,6 @@ jobs:
           username: ihfazh
           port: 22
           key: ${{ secrets.SSH_KEY }}
+          password: ${{ secrets.PASSWORD }}
           script: bash /home/ihfazh/deploy.sh
           debug: true
