@@ -1,11 +1,13 @@
+from adminsortable2.admin import SortableInlineAdminMixin
 from django.contrib import admin
-from django.contrib.admin import ModelAdmin, TabularInline
+from django.contrib.admin import ModelAdmin, TabularInline, StackedInline
 
 from ksatria_muslim.books.models import Book, Page, BookReference
 
 
-class PageInline(TabularInline):
+class PageInline(SortableInlineAdminMixin, TabularInline):
     model = Page
+    ordering = ["page"]
 
 
 @admin.register(Book)

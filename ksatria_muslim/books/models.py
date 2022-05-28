@@ -30,6 +30,9 @@ def page_audio(instance, filename):
 
 class Page(TimeStampedModel):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    page = models.IntegerField()
+    page = models.IntegerField(db_index=True, default=0)
     text = models.TextField()
     audio = models.FileField(upload_to=page_audio, null=True, blank=True)
+
+    class Meta:
+        ordering = ["page"]

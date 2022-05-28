@@ -25,3 +25,4 @@ django-cors-headers==3.11.0 # https://github.com/adamchainz/django-cors-headers
 drf-spectacular==0.22.1  # https://github.com/tfranzel/drf-spectacular
 
 django-rest-auth[with_social]==0.9.5
+django-admin-sortable2==1.0.4
