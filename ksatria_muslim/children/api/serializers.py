@@ -10,6 +10,7 @@ class ChildSerializer(ModelSerializer):
     class Meta:
         model = Child
         fields = ["id", "name", "enable_read_to_me", "points", "stars", "parent_id"]
+        read_only_fields = ["parent_id"]
 
     points = serializers.SerializerMethodField()
     def get_points(self, obj):
