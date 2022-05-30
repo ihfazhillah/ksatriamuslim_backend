@@ -1,14 +1,39 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from ksatria_muslim.books.models import Book, BookReference, Page
+
 User = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class BookReferenceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ["username", "name", "url"]
+        model = BookReference
+        fields = ["title", "author"]
 
-        extra_kwargs = {
-            "url": {"view_name": "api:user-detail", "lookup_field": "username"}
-        }
+
+class PageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
+        fields = [
+            "page",
+            "text",
+            "audio"
+        ]
+
+
+class BookSerializer(serializers.ModelSerializer):
+    reference = BookReferenceSerializer()
+    page_set = PageSerializer(many=True)
+
+    class Meta:
+        model = Book
+        fields = [
+            "title",
+            "cover",
+            "reference_text_ar",
+            "reference_text_id",
+            "reference",
+            "reference_note",
+            "page_set"
+        ]
