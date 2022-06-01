@@ -15,6 +15,6 @@ class BookViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     pagination_class = KsatriaMuslimPagination
 
     def get_serializer_class(self):
-        if self.action == "detail":
+        if self.action == "retrieve":
             return BookDetailSerializer
         return self.serializer_class
