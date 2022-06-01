@@ -9,13 +9,14 @@ User = get_user_model()
 class BookReferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookReference
-        fields = ["title", "author"]
+        fields = ["title", "author", "id"]
 
 
 class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = [
+            "id",
             "page",
             "text",
             "audio"
@@ -25,6 +26,25 @@ class PageSerializer(serializers.ModelSerializer):
 class BookSerializer(serializers.ModelSerializer):
     reference = BookReferenceSerializer()
     # page_set = PageSerializer(many=True)
+
+    class Meta:
+        model = Book
+        fields = [
+            "id",
+            "title",
+            "cover",
+            # "reference_text_ar",
+            # "reference_text_id",
+            # "reference",
+            # "reference_note",
+            "created",
+            # "page_set"
+        ]
+
+
+class BookDetailSerializer(serializers.ModelSerializer):
+    reference = BookReferenceSerializer()
+    page_set = PageSerializer(many=True)
 
     class Meta:
         model = Book
