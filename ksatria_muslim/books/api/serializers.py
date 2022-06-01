@@ -57,5 +57,5 @@ class BookDetailSerializer(serializers.ModelSerializer):
             "reference",
             "reference_note",
             "created",
-            # "page_set"
+            "page_set"
         ]
