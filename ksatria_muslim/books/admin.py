@@ -2,7 +2,7 @@ from adminsortable2.admin import SortableInlineAdminMixin
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin, TabularInline, StackedInline
 
-from ksatria_muslim.books.models import Book, Page, BookReference
+from ksatria_muslim.books.models import Book, Page, BookReference, BookState
 
 
 class PageInline(SortableInlineAdminMixin, TabularInline):
@@ -21,3 +21,17 @@ class BookAdmin(ModelAdmin):
 @admin.register(BookReference)
 class BookReferenceAdmin(ModelAdmin):
     search_fields = ["title", "author"]
+
+
+@admin.register(BookState)
+class BookStateAdmin(ModelAdmin):
+    list_display = ["child", "book", "is_gift_opened"]
+
+    @admin.display(description="Child")
+    def child(self, obj):
+        return obj.child.name
+
+    @admin.display(description="Book")
+    def book(self, obj):
+        return obj.book.title
+

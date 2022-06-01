@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from ksatria_muslim.books.models import Book, BookReference, Page
+from ksatria_muslim.books.models import Book, BookReference, Page, BookState
 
 User = get_user_model()
 
@@ -58,4 +58,15 @@ class BookDetailSerializer(serializers.ModelSerializer):
             "reference_note",
             "created",
             "page_set"
+        ]
+
+
+class BookStateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookState
+        fields = [
+            "id",
+            "child",
+            "book",
+            "is_gift_opened"
         ]

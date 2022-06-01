@@ -1,6 +1,8 @@
 from django.db import models
 from model_utils.models import TimeStampedModel
 
+from ksatria_muslim.children.models import Child
+
 
 class BookReference(TimeStampedModel):
     title = models.CharField(max_length=255)
@@ -36,3 +38,12 @@ class Page(TimeStampedModel):
 
     class Meta:
         ordering = ["page"]
+
+
+class BookState(TimeStampedModel):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    is_gift_opened = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ["book", "child"]
