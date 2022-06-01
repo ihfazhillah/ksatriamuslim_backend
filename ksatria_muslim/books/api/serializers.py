@@ -24,7 +24,7 @@ class PageSerializer(serializers.ModelSerializer):
 
 
 class BookSerializer(serializers.ModelSerializer):
-    reference = BookReferenceSerializer()
+    # reference = BookReferenceSerializer()
     # page_set = PageSerializer(many=True)
 
     class Meta:
