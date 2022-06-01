@@ -24,7 +24,7 @@ class PageSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
     reference = BookReferenceSerializer()
-    page_set = PageSerializer(many=True)
+    # page_set = PageSerializer(many=True)
 
     class Meta:
         model = Book
@@ -35,5 +35,5 @@ class BookSerializer(serializers.ModelSerializer):
             "reference_text_id",
             "reference",
             "reference_note",
-            "page_set"
+            # "page_set"
         ]
