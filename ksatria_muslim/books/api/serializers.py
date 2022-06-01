@@ -29,11 +29,13 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = [
+            "id",
             "title",
             "cover",
             "reference_text_ar",
             "reference_text_id",
             "reference",
             "reference_note",
+            "created",
             # "page_set"
         ]
