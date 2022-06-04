@@ -48,7 +48,7 @@ class BookStateViewSet(ListModelMixin, GenericViewSet):
     queryset = BookState.objects.all()
 
     def get_queryset(self):
-        book_ids = self.request.query_params.getlist("book_ids")
+        book_ids = self.request.query_params.getlist("books_id")
         child_id = self.request.query_params.get("child_id")
         qs = BookState.objects.all()
 
