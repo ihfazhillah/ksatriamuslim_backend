@@ -22,7 +22,7 @@ class BookViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         return self.serializer_class
 
     def get_queryset(self):
-        return self.queryset.order_by("-created")
+        return self.queryset.order_by("-id")
 
     @action(detail=True, methods=["POST"])
     def update_state(self, request, pk=None):
