@@ -22,10 +22,20 @@ class ChildPackage(TimeStampedModel):
     def __str__(self):
         return f"{self.child_id} - {self.package_id}"
 
+    @property
+    def remaining(self):
+        # total usage in seconds, and package length in minutes
+        usages = self.usages.all()
+        if not usages:
+            return self.package.length
+
+        usage_duration = sum([usage.duration for usage in usages]) / 60
+        return self.package.length - usage_duration
+
 
 class PackageUsage(TimeStampedModel):
     child_package = models.ForeignKey(ChildPackage, on_delete=models.CASCADE, related_name="usages")
-    started_at = models.DateTimeField()
+    started_at = models.DateTimeField(null=True, blank=True)
     finished_at = models.DateTimeField(null=True, blank=True)
 
     @property
