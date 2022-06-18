@@ -327,3 +327,4 @@ tags
 ksatria_muslim/media/
 
 .pytest_cache/
+.env
