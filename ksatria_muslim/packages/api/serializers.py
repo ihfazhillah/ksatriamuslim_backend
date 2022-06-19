@@ -25,8 +25,8 @@ class PackageSerializer(serializers.RelatedField):
 class PackageLogUsageSerializer(serializers.Serializer):
     child = serializers.PrimaryKeyRelatedField(queryset=Child.objects.all())
     package = PackageSerializer(queryset=Package.objects.all())
-    finished_at = serializers.DateTimeField(required=False, format="%Y%m%d%H%M%S", input_formats=["%Y%m%d%H%M"])
-    started_at = serializers.DateTimeField(required=False, format="%Y%m%d%H%M%S", input_formats=["%Y%m%d%H%M"])
+    finished_at = serializers.DateTimeField(required=False, format="%Y%m%d%H%M%S", input_formats=["%Y%m%d%H%M%S"])
+    started_at = serializers.DateTimeField(required=False, format="%Y%m%d%H%M%S", input_formats=["%Y%m%d%H%M%S"])
 
 
 class BuyPackageBodySerializer(serializers.Serializer):
