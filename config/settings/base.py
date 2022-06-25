@@ -332,7 +332,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Ksatria Muslim API",
     "DESCRIPTION": "Documentation of API endpoints of Ksatria Muslim",
     "VERSION": "1.0.0",
-    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+    # "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     "SERVERS": [
         {"url": "http://127.0.0.1:8000", "description": "Local Development server"},
         {"url": "https://ksatriamuslim.com", "description": "Production server"},
