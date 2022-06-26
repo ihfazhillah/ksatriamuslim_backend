@@ -20,7 +20,7 @@ class ChildViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, CreateM
     def set_picture(self, request, pk, *args, **kwargs):
         obj = self.get_object()
         picture_id = request.data.get("picture_id")
-        if picture_id:
+        if not picture_id:
             return Response({"message": "Bad Request"}, status=400)
 
         picture = get_object_or_404(PhotoProfile, pk=picture_id)
