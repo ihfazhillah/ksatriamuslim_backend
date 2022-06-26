@@ -6,6 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 
 from ksatria_muslim.children.api.serializers import ChildSerializer, PhotoProfileSerializer
 from ksatria_muslim.children.models import Child, PhotoProfile
+from ksatria_muslim.utils.pagination import KsatriaMuslimPagination
 
 
 class ChildViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, CreateModelMixin, GenericViewSet):
@@ -32,3 +33,4 @@ class ChildViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, CreateM
 class PhotoProfileViewSet(ListModelMixin, GenericViewSet):
     serializer_class = PhotoProfileSerializer
     queryset = PhotoProfile.objects.all()
+    pagination_class = KsatriaMuslimPagination
