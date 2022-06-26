@@ -27,7 +27,7 @@ class ChildViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, CreateM
         obj.picture = picture
         obj.save()
 
-        return Response(ChildSerializer(obj).data)
+        return Response(ChildSerializer(obj, context={"request": request}).data)
 
 
 class PhotoProfileViewSet(ListModelMixin, GenericViewSet):
