@@ -50,7 +50,7 @@ class BookViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         if not child_id:
             return Response({"error": "no child id supplied"}, status=400)
 
-        ChildBookReadingHistory.objects.update_or_create(
+        ChildBookReadingHistory.objects.create(
             book=book,
             child_id=child_id
         )
