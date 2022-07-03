@@ -62,7 +62,7 @@ class BookDetailSerializer(serializers.ModelSerializer):
 
 
 class BookStateSerializer(serializers.ModelSerializer):
-    locked = serializers.BooleanField(source="locked")
+    locked = serializers.BooleanField()
 
     class Meta:
         model = BookState
