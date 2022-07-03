@@ -13,7 +13,7 @@ User = get_user_model()
 
 class BookViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     serializer_class = BookSerializer
-    queryset = Book.objects.all()
+    queryset = Book.objects.all().order_by("-id")
     pagination_class = KsatriaMuslimPagination
 
     def get_serializer_class(self):
