@@ -17,8 +17,8 @@ class ChildSerializer(ModelSerializer):
 
     class Meta:
         model = Child
-        fields = ["id", "name", "enable_read_to_me", "points", "stars", "parent_id", "picture"]
-        read_only_fields = ["parent_id"]
+        fields = ["id", "name", "enable_read_to_me", "points", "stars", "parent_id", "picture", "default_package_name"]
+        read_only_fields = ["parent_id", "default_package_name"]
 
     points = serializers.SerializerMethodField()
     def get_points(self, obj):
@@ -27,3 +27,8 @@ class ChildSerializer(ModelSerializer):
     stars = serializers.SerializerMethodField()
     def get_stars(self, obj):
         return obj.rewards.filter(reward_type=REWARD_TYPES.Star).aggregate(models.Sum("count"))["count__sum"] or 0
+
+    default_package_name = serializers.SerializerMethodField()
+    def get_default_package_name(self, obj):
+        if obj.default_package:
+            return obj.default_package.title

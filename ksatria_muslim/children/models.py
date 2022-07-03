@@ -11,6 +11,7 @@ class Child(TimeStampedModel):
     parent = models.ForeignKey(User, on_delete=models.CASCADE)
     enable_read_to_me = models.BooleanField(default=False)
     picture = models.ForeignKey("PhotoProfile", null=True, blank=True, on_delete=models.SET_NULL)
+    default_package = models.ForeignKey("packages.Package", on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
