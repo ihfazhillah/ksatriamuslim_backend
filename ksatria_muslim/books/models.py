@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
 from ksatria_muslim.children.models import Child
@@ -47,3 +48,21 @@ class BookState(TimeStampedModel):
 
     class Meta:
         unique_together = ["book", "child"]
+
+    @property
+    def locked(self):
+        latest_history = ChildBookReadingHistory.objects.filter(
+            child=self.child, book=self.book
+        ).order_by("-created")[:]
+        if not latest_history:
+            return False
+
+        days_delta = (timezone.now() - latest_history[0].created).days
+        multiples_of_ten = len(latest_history) / 10 == 0
+
+        return multiples_of_ten and days_delta <= 3
+
+
+class ChildBookReadingHistory(TimeStampedModel):
+    child = models.ForeignKey(Child, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)

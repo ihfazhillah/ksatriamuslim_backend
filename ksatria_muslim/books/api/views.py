@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from .serializers import BookSerializer, BookDetailSerializer, BookStateSerializer
-from ..models import Book, BookState
+from ..models import Book, BookState, ChildBookReadingHistory
 from ...utils.pagination import KsatriaMuslimPagination
 
 User = get_user_model()
@@ -38,6 +38,21 @@ class BookViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             book=book,
             child_id=child_id,
             defaults={"is_gift_opened": gift_opened}
+        )
+
+        return Response({"status": "ok"})
+
+    @action(detail=True, methods=["POST"])
+    def log(self, request, pk=None):
+        book = self.get_object()
+
+        child_id = request.data.get("child_id")
+        if not child_id:
+            return Response({"error": "no child id supplied"}, status=400)
+
+        ChildBookReadingHistory.objects.update_or_create(
+            book=book,
+            child_id=child_id
         )
 
         return Response({"status": "ok"})
