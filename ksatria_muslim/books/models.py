@@ -58,7 +58,7 @@ class BookState(TimeStampedModel):
             return False
 
         days_delta = (timezone.now() - latest_history[0].created).days
-        multiples_of_ten = len(latest_history) / 10 == 0
+        multiples_of_ten = len(latest_history) % 10 == 0
 
         return multiples_of_ten and days_delta <= 3
 
