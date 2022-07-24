@@ -20,7 +20,7 @@ class ChildPackageUsageInline(TabularInline):
 
 @admin.register(ChildPackage)
 class ChildPackageAdmin(ModelAdmin):
-    list_display = ["child", "package", "usage"]
+    list_display = ["child", "package", "usage", "is_exhausted"]
     inlines = [ChildPackageUsageInline]
 
     @admin.display(description="Child")
