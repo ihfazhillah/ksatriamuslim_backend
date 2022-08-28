@@ -340,3 +340,12 @@ SPECTACULAR_SETTINGS = {
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+BOOK_IMAGE_SIZES = [
+    ((480, 320), 25, "mdpi"),
+    ((800, 480), 38, "hdpi"),
+    ((1280, 720), 50, "xhdpi"),
+    ((1440, 960), 75, "xxhdpi"),
+    ((1920, 1280), 100, "xxxhdpi"),
+]
+BOOK_SPECIAL_WORDS = ["shollallohu 'alaihi wa sallam", "shollallohu 'alaihi wasallam"]
