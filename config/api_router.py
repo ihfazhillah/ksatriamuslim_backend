@@ -24,5 +24,5 @@ router.register("package-usage", PackageUsageViewSet)
 
 app_name = "api"
 urlpatterns = router.urls + [
-    path("books/force-generate-images/", force_generate_images, name="force-generate-images"),
+    path("book-tools/force-generate-images/", force_generate_images, name="force-generate-images"),
 ]
