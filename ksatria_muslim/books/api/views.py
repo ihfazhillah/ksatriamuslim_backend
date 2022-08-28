@@ -1,11 +1,12 @@
 from django.contrib.auth import get_user_model
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from .serializers import BookSerializer, BookDetailSerializer, BookStateSerializer
 from ..models import Book, BookState, ChildBookReadingHistory
+from ..tasks import process_book
 from ...utils.pagination import KsatriaMuslimPagination
 
 User = get_user_model()
@@ -74,3 +75,10 @@ class BookStateViewSet(ListModelMixin, GenericViewSet):
             qs = qs.filter(child_id=child_id)
 
         return qs
+
+
+@api_view(["GET"])
+def force_generate_images(request):
+    for book in Book.objects.all():
+        process_book.delay(book.id)
+    return Response({"status": "ok"})
