@@ -184,7 +184,7 @@ def wrap_text(words, font, max_width):
     # hitung >= max_width -> menambahkan ke list + current line == word ?: current line = temp line
         width = font.getbbox(temp_line)[2]  # x,y,x,y
         if width >= max_width:
-            lines.append(temp_line)
+            lines.append(current_line)
             current_line = ""
         else:
             current_line = temp_line
@@ -235,7 +235,6 @@ def split_words(special_words, text):
     return final_words
 
 
-
 def initialize_font(font_size, arabic=False):
     if arabic:
         font_name = "uthman-toha.ttf"
@@ -245,3 +244,14 @@ def initialize_font(font_size, arabic=False):
     abs_font_path = find(f"fonts/{font_name}")
     return ImageFont.truetype(abs_font_path, font_size)
 
+
+def is_arabic(text):
+    """
+    check the text is arabic or not. Just check if any arabic character
+    :param text:
+    :return: True if any arabic character found else False
+    """
+
+    pattern = r"[\u0600-\u06FF]"
+    resp = re.search(pattern, text)
+    return resp is not None

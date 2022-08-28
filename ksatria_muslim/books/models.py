@@ -1,8 +1,11 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils import timezone
 from model_utils.models import TimeStampedModel
 
 from ksatria_muslim.children.models import Child
+from ksatria_muslim.utils.book_image import is_arabic, process_page_image
 
 
 class BookReference(TimeStampedModel):
@@ -39,6 +42,14 @@ class Page(TimeStampedModel):
 
     class Meta:
         ordering = ["page"]
+
+
+@receiver(post_save, sender=Page)
+def update_page_image(sender, instance: Page, **kwargs):
+    # not the best place, we will run multiple times if we create a new book
+    from ksatria_muslim.books.tasks import process_book
+
+    process_book.delay(instance.book_id)
 
 
 class BookState(TimeStampedModel):
