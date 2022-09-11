@@ -111,6 +111,9 @@ def process_page_image(text, file_name, arabic=False):
     :return: Nothing
     """
 
+    # we replace new lines
+    text = text.replace("\n", " ")
+
     sizes = settings.BOOK_IMAGE_SIZES
     for image_size, font_size, dimen_name in sizes:
         font = initialize_font(font_size, arabic)
@@ -185,7 +188,7 @@ def wrap_text(words, font, max_width):
         width = font.getbbox(temp_line)[2]  # x,y,x,y
         if width >= max_width:
             lines.append(current_line)
-            current_line = ""
+            current_line = word
         else:
             current_line = temp_line
 
