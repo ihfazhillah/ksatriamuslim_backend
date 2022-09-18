@@ -242,7 +242,7 @@ def initialize_font(font_size, arabic=False):
     if arabic:
         font_name = "uthman-toha.ttf"
     else:
-        font_name = "pastel-crayon.ttf"
+        font_name = "BookWorm.ttf"
 
     abs_font_path = find(f"fonts/{font_name}")
     return ImageFont.truetype(abs_font_path, font_size)
