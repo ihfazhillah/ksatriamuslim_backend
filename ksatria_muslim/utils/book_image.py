@@ -227,7 +227,7 @@ def get_y_and_heights(text_wrapped, dimensions, margin, font):
 def split_words(special_words, text):
     special_words_pattern = "|".join(special_words)
     separators = "[,.?!]?"
-    text_pattern = f"(?P<final>({special_words_pattern}|[\w\-`]+){separators})"
+    text_pattern = f"(?P<final>({special_words_pattern}|[\w\-\'\`’]+){separators})"
     pattern = re.compile(text_pattern)
 
     final_words = []
