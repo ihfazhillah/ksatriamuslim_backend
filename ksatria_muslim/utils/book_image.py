@@ -112,7 +112,7 @@ def process_page_image(text, file_name, arabic=False):
     """
 
     # we replace new lines
-    text = text.replace("\n", " ")
+    text = text.replace("\n", " ").strip()
 
     sizes = settings.BOOK_IMAGE_SIZES
     for image_size, font_size, dimen_name in sizes:
@@ -187,13 +187,13 @@ def wrap_text(words, font, max_width):
     # hitung >= max_width -> menambahkan ke list + current line == word ?: current line = temp line
         width = font.getbbox(temp_line)[2]  # x,y,x,y
         if width >= max_width:
-            lines.append(current_line)
+            lines.append(current_line.strip())
             current_line = word
         else:
             current_line = temp_line
 
     # keluar dari loop -> jangan lupa tambahkan current line
-    lines.append(current_line)
+    lines.append(current_line.strip())
 
     # lines
     return lines
@@ -227,7 +227,7 @@ def get_y_and_heights(text_wrapped, dimensions, margin, font):
 def split_words(special_words, text):
     special_words_pattern = "|".join(special_words)
     separators = "[,.?!]?"
-    text_pattern = f"(?P<final>({special_words_pattern}|[\w\-]+){separators})"
+    text_pattern = f"(?P<final>({special_words_pattern}|[\w\-`]+){separators})"
     pattern = re.compile(text_pattern)
 
     final_words = []
