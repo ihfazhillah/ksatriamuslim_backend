@@ -20,4 +20,4 @@ def process_book(book_id):
         file_name = f"books/{book_id}/{page.page}"
         arabic = is_arabic(page.text)
         process_page_image(page.text, file_name, arabic)
-    stamp_book(f"books/{book_id}/stamp")
+        stamp_book(f"books/{book_id}/{page.page}/stamp")
