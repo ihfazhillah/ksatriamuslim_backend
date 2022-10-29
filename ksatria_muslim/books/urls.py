@@ -1,14 +1,8 @@
 from django.urls import path
 
-from ksatria_muslim.users.views import (
-    user_detail_view,
-    user_redirect_view,
-    user_update_view,
-)
+from ksatria_muslim.books.views import book_image_gallery
 
-app_name = "users"
+app_name = "books"
 urlpatterns = [
-    path("~redirect/", view=user_redirect_view, name="redirect"),
-    path("~update/", view=user_update_view, name="update"),
-    path("<str:username>/", view=user_detail_view, name="detail"),
+    path("<pk>/pages-preview/", book_image_gallery, name="pages-preview")
 ]
