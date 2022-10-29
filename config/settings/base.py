@@ -342,11 +342,11 @@ SPECTACULAR_SETTINGS = {
 # ------------------------------------------------------------------------------
 
 BOOK_IMAGE_SIZES = [
-    ((480, 320), 45, "mdpi"),
+    ((480, 320), 35, "mdpi"),
     ((800, 480), 60, "hdpi"),
     ((1280, 720), 90, "xhdpi"),
     ((1440, 960), 140, "xxhdpi"),
-    ((1920, 1280), 190, "xxxhdpi"),
+    ((1920, 1280), 180, "xxxhdpi"),
 ]
 BOOK_SPECIAL_WORDS = ["shollallohu 'alaihi wa sallam", "shollallohu 'alaihi wasallam"]
 FONTS_DIRECTORY = env.str("FONTS_DIRECTORY", default="/home/ihfazh/fonts/")
