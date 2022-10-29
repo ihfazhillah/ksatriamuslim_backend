@@ -164,8 +164,8 @@ def process_page_image(text, file_name, arabic=False):
         if default_storage.exists(final_fname):
             default_storage.delete(final_fname)
         default_storage.save(final_fname, img_byte_arr)
-        img_byte_arr.close()
         image.close()
+        img_byte_arr.close()
 
         if arabic:
             page_data = fix_arabic_page_data(page_data)
