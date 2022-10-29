@@ -2,6 +2,7 @@ import datetime
 import io
 import itertools
 import json
+import os
 import re
 
 from PIL import Image, ImageFont, ImageDraw
@@ -245,7 +246,7 @@ def initialize_font(font_size, arabic=False):
     else:
         font_name = "BookWorm.ttf"
 
-    abs_font_path = find(f"fonts/{font_name}")
+    abs_font_path = os.path.join(settings.FONTS_DIRECTORY, font_name)
     return ImageFont.truetype(abs_font_path, font_size)
 
 
