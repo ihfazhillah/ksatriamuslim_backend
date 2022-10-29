@@ -1,3 +1,4 @@
+import datetime
 import io
 import itertools
 import json
@@ -258,3 +259,13 @@ def is_arabic(text):
     pattern = r"[\u0600-\u06FF]"
     resp = re.search(pattern, text)
     return resp is not None
+
+
+def stamp_book(f_name):
+    final_f_name = f"books_image/{f_name}"
+    if default_storage.exists(final_f_name):
+        default_storage.delete(final_f_name)
+
+    timestamp = io.StringIO(str(datetime.datetime.now().timestamp()))
+    default_storage.save(final_f_name, timestamp)
+    timestamp.close()

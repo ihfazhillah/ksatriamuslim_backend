@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 
 from config import celery_app
 from ksatria_muslim.books.models import Book
-from ksatria_muslim.utils.book_image import is_arabic, process_page_image
+from ksatria_muslim.utils.book_image import is_arabic, process_page_image, stamp_book
 
 User = get_user_model()
 
@@ -20,3 +20,4 @@ def process_book(book_id):
         file_name = f"books/{book_id}/{page.page}"
         arabic = is_arabic(page.text)
         process_page_image(page.text, file_name, arabic)
+    stamp_book(f"books/{book_id}/stamp")
