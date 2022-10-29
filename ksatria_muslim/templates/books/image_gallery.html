@@ -25,7 +25,7 @@
     {% for page in instance.page_set.all %}
       <div class="col-4">
       <div class="figure">
-        <img src="{{ media_url }}/books_image/books/{{ instance.id }}/{{ page.page }}-{{ size }}.png" alt="" class="img-fluid figure-img">
+        <img src="{{ media_url }}books_image/books/{{ instance.id }}/{{ page.page }}-{{ size }}.png" alt="" class="img-fluid figure-img">
         <figcaption class="figure-caption">{{ page.text }} [Hal {{ page.page }}]</figcaption>
       </div>
       </div>
