@@ -211,7 +211,7 @@ def get_y_and_heights(text_wrapped, dimensions, margin, font):
 
     for _ in text_wrapped:
         line_heights.append(
-            ascent + descent + ((ascent + descent) * 0.5)
+            ascent + descent + ((ascent + descent) * 0.25)
         )
 
     line_heights[-1] -= margin
