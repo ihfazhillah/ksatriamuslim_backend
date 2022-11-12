@@ -63,8 +63,8 @@ class BookState(TimeStampedModel):
     @property
     def locked(self):
         latest_history = ChildBookReadingHistory.objects.filter(
-            child=self.child, book=self.book
-        ).order_by("-created")[:]
+            child=self.child, book=self.book, finished__isnull=False
+        ).order_by("-finished")[:]
         if not latest_history:
             return False
 
@@ -77,3 +77,4 @@ class BookState(TimeStampedModel):
 class ChildBookReadingHistory(TimeStampedModel):
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    finished = models.DateTimeField(null=True, blank=True)

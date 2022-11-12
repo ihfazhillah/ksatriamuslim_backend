@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from rest_framework.decorators import action, api_view
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
@@ -57,6 +58,28 @@ class BookViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         )
 
         return Response({"status": "ok"})
+
+    @action(detail=True, methods=["POST"])
+    def finish(self, request, pk=None):
+        book = self.get_object()
+
+        child_id = request.data.get("child_id")
+        if not child_id:
+            return Response({"error": "no child id supplied"}, status=400)
+
+        # guessing the latest history
+        history = ChildBookReadingHistory.objects.filter(
+            book=book,
+            child_id=child_id,
+            finished__isnull=True
+        ).order_by("-created").first()
+
+        if history:
+            history.finished = timezone.now()
+            history.save()
+            return Response({"status": "ok"})
+
+        return Response({"status": "error", "message": "no history found"})
 
 
 class BookStateViewSet(ListModelMixin, GenericViewSet):
