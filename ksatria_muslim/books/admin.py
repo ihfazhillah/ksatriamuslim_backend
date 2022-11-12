@@ -46,7 +46,7 @@ class BookStateAdmin(ModelAdmin):
 
 @admin.register(ChildBookReadingHistory)
 class ChildBookReadingHistoryAdmin(ModelAdmin):
-    list_display = ["child", "book", "created"]
+    list_display = ["child", "book", "created", "finished"]
     @admin.display(description="Child")
     def child(self, obj):
         return obj.child.name
