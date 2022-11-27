@@ -31,8 +31,8 @@ def book_text_page_csv(request, pk):
     for path, page in paths:
         f = default_storage.open(path)
         metadata = json.load(f)
-        for item in metadata.get("page_data", []):
-            rows.append([pk, page.page, item.get("text")])
+        for index, item in enumerate(metadata.get("page_data", [])):
+            rows.append([pk, page.page, index, item.get("text")])
 
     response = HttpResponse(
         content_type="text/csv",
@@ -40,6 +40,6 @@ def book_text_page_csv(request, pk):
     )
 
     writer = csv.writer(response)
-    writer.writerow(["book_id", "page_number", "text"])
+    writer.writerow(["book_id", "page_number", "index", "text"])
     writer.writerows(rows)
     return response
