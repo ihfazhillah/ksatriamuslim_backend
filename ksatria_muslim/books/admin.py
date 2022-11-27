@@ -14,15 +14,20 @@ class PageInline(SortableInlineAdminMixin, TabularInline):
 
 @admin.register(Book)
 class BookAdmin(ModelAdmin):
-    list_display = ["title", "cover", "preview_pages"]
+    list_display = ["title", "cover", "preview_pages", "download_text"]
     search_fields = ["title"]
     inlines = [PageInline]
     autocomplete_fields = ["reference"]
-    readonly_fields = ["preview_pages"]
+    readonly_fields = ["preview_pages", "download_text"]
 
     def preview_pages(self, obj):
         return mark_safe(
             f"<a href='{reverse('books:pages-preview', args=[obj.id])}' target='_blank'>Klik untuk melihat preview gambar halaman</a>"
+        )
+
+    def download_text(self, obj):
+        return mark_safe(
+            f"<a href='{reverse('books:book-text-page-csv', args=[obj.id])}' target='_blank'>Klik untuk mdownload text</a>"
         )
 
 
