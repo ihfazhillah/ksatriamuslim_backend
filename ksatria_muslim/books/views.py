@@ -1,11 +1,14 @@
+import zipfile
+
 import csv
 import json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.core.files.storage import default_storage
 
+from ksatria_muslim.books.book_storage import book_storage
 from ksatria_muslim.books.models import Book
 
 
@@ -42,4 +45,25 @@ def book_text_page_csv(request, pk):
     writer = csv.writer(response)
     writer.writerow(["book_id", "page_number", "index", "text"])
     writer.writerows(rows)
+    return response
+
+
+def book_audio_zip(request, pk):
+    instance = get_object_or_404(Book, pk=pk)
+    base_path = f"{pk}/audio/"
+    if not book_storage.exists(base_path):
+        raise Http404("Audio not found.")
+    _, files = book_storage.listdir(base_path)
+
+    response = HttpResponse(
+        content_type="application/zip",
+        headers={
+            "Content-Disposition": f"attachment; filename={instance.title}-audio.zip"
+        }
+    )
+
+    with zipfile.ZipFile(response, "w") as compressor:
+        for file in files:
+            compressor.write(book_storage.path(f"{base_path}{file}"), arcname=file)
+
     return response

@@ -350,3 +350,4 @@ BOOK_IMAGE_SIZES = [
 ]
 BOOK_SPECIAL_WORDS = ["shollallohu 'alaihi wa sallam", "shollallohu 'alaihi wasallam"]
 FONTS_DIRECTORY = env.str("FONTS_DIRECTORY", default="/home/ihfazh/fonts/")
+BOOK_STORAGE_MEDIA = str(APPS_DIR / "books_media")
