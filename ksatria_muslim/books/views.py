@@ -5,10 +5,11 @@ import json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.core.files.storage import default_storage
 
 from ksatria_muslim.books.book_storage import book_storage
+from ksatria_muslim.books.forms import UploadAudioForm
 from ksatria_muslim.books.models import Book
 
 
@@ -46,6 +47,29 @@ def book_text_page_csv(request, pk):
     writer.writerow(["book_id", "page_number", "index", "text"])
     writer.writerows(rows)
     return response
+
+
+@login_required
+def upload_audio_zip(request, pk):
+    instance = get_object_or_404(Book, pk=pk)
+    form = UploadAudioForm(
+        book=instance,
+        data=request.POST or None,
+        files=request.FILES or None
+    )
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect("admin:books_book_changelist")
+
+    context = {
+        "form": form
+    }
+    return render(
+        request,
+        "books/upload-audio-zip.html",
+        context
+    )
 
 
 def book_audio_zip(request, pk):

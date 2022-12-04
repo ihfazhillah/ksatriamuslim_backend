@@ -1,42 +1,63 @@
-from allauth.account.forms import SignupForm
-from allauth.socialaccount.forms import SignupForm as SocialSignupForm
-from django.contrib.auth import forms as admin_forms
-from django.contrib.auth import get_user_model
-from django.utils.translation import gettext_lazy as _
+import datetime
+import json
+import os
+import zipfile
 
-User = get_user_model()
+from django import forms
+from django.core.files.storage import default_storage
 
-
-class UserAdminChangeForm(admin_forms.UserChangeForm):
-    class Meta(admin_forms.UserChangeForm.Meta):
-        model = User
+from ksatria_muslim.books.book_storage import book_storage
+from ksatria_muslim.books.models import Book
 
 
-class UserAdminCreationForm(admin_forms.UserCreationForm):
-    """
-    Form for User Creation in the Admin Area.
-    To change user signup, see UserSignupForm and UserSocialSignupForm.
-    """
+class UploadAudioForm(forms.Form):
+    zip_file = forms.FileField()
 
-    class Meta(admin_forms.UserCreationForm.Meta):
-        model = User
+    def __init__(self, *args, **kwargs):
+        self.book: Book = kwargs.pop("book")
+        super().__init__(*args, **kwargs)
 
-        error_messages = {
-            "username": {"unique": _("This username has already been taken.")}
-        }
+    def clean_zip_file(self):
+        data = self.cleaned_data["zip_file"]
 
+        paths = []
+        for page in self.book.page_set.all():
+            fname = f"book_image_metadata/books/{self.book.id}/{page.page}-hdpi.json"
+            paths.append((fname, page))
 
-class UserSignupForm(SignupForm):
-    """
-    Form that will be rendered on a user sign up section/screen.
-    Default fields will be added automatically.
-    Check UserSocialSignupForm for accounts created from social.
-    """
+        rows = []
+        for path, page in paths:
+            f = default_storage.open(path)
+            metadata = json.load(f)
+            for index, item in enumerate(metadata.get("page_data", [])):
+                # ganti kalau sudah mp3
+                rows.append([f"{self.book.id}_{page.page}_{index}.mp3", item.get("text")])
 
+        with zipfile.ZipFile(data, "r") as compressed:
+            # first layer: validate extension
+            for file in compressed.namelist():
+                if not file.endswith("mp3") and not file.endswith("csv"):
+                    raise forms.ValidationError("File ada yang bukan mp3")
 
-class UserSocialSignupForm(SocialSignupForm):
-    """
-    Renders the form when user has signed up using social accounts.
-    Default fields will be added automatically.
-    See UserSignupForm otherwise.
-    """
+            # second layer: validate file page
+            for item, text in rows:
+                if item not in compressed.namelist():
+                    raise forms.ValidationError(f"File {item} tidak ditemukan di zipfile. text: {text}")
+
+        return data
+
+    def save(self):
+        base_path = f"{self.book.id}/audio/"
+
+        if not book_storage.exists(base_path):
+            os.makedirs(
+                book_storage.path(base_path),
+                exist_ok=True
+            )
+
+        with zipfile.ZipFile(self.cleaned_data["zip_file"], "r") as compressed:
+            compressed.extractall(book_storage.path(base_path))
+
+        with open(book_storage.path(base_path + "timestamp"), "w") as timestamp:
+            timestamp.write(str(datetime.datetime.now().timestamp()))
+
