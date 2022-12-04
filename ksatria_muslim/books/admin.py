@@ -14,11 +14,11 @@ class PageInline(SortableInlineAdminMixin, TabularInline):
 
 @admin.register(Book)
 class BookAdmin(ModelAdmin):
-    list_display = ["title", "cover", "preview_pages", "download_text"]
+    list_display = ["title", "cover", "preview_pages", "download_text", "upload_audio_zip"]
     search_fields = ["title"]
     inlines = [PageInline]
     autocomplete_fields = ["reference"]
-    readonly_fields = ["preview_pages", "download_text"]
+    readonly_fields = ["preview_pages", "download_text", "upload_audio_zip"]
 
     def preview_pages(self, obj):
         return mark_safe(
@@ -28,6 +28,11 @@ class BookAdmin(ModelAdmin):
     def download_text(self, obj):
         return mark_safe(
             f"<a href='{reverse('books:book-text-page-csv', args=[obj.id])}' target='_blank'>Klik untuk mdownload text</a>"
+        )
+
+    def upload_audio_zip(self, obj):
+        return mark_safe(
+            f"<a href='{reverse('books:upload-audio-zip', args=[obj.id])}' target='_blank'>Klik untuk upload audio</a>"
         )
 
 
