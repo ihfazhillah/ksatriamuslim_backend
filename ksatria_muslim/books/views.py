@@ -4,7 +4,7 @@ import csv
 import json
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.files.storage import default_storage
 
@@ -73,10 +73,28 @@ def upload_audio_zip(request, pk):
 
 
 def book_audio_zip(request, pk):
+    token = request.GET.get("token")
+    if not token:
+        return HttpResponseForbidden()
+
+    if not request.user.auth_token.key == token:
+        return HttpResponseForbidden()
+
     instance = get_object_or_404(Book, pk=pk)
     base_path = f"{pk}/audio/"
     if not book_storage.exists(base_path):
         raise Http404("Audio not found.")
+
+    timestamp = request.GET.get("timestamp", None)
+    timestamp_file = f"{base_path}timestamp"
+    if timestamp:
+        # if found, check also if the given timestamp equals then
+        # raise audio not found
+        f = book_storage.open(timestamp_file, "r")
+        if timestamp == f.read().strip():
+            raise Http404("Audio same with in the local")
+        f.close()
+
     _, files = book_storage.listdir(base_path)
 
     response = HttpResponse(
