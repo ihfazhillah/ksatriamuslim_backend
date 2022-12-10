@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.files.storage import default_storage
+from rest_framework.authtoken.models import Token
 
 from ksatria_muslim.books.book_storage import book_storage
 from ksatria_muslim.books.forms import UploadAudioForm
@@ -77,7 +78,8 @@ def book_audio_zip(request, pk):
     if not token:
         return HttpResponseForbidden()
 
-    if not request.user.auth_token.key == token:
+    token_found = Token.objects.filter(key=token).exists()
+    if not token_found:
         return HttpResponseForbidden()
 
     instance = get_object_or_404(Book, pk=pk)
