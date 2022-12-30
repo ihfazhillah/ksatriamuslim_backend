@@ -6,6 +6,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
 
+from ksatria_muslim.utils import sentry_before_send
 from .base import *  # noqa
 from .base import env
 
@@ -158,6 +159,7 @@ sentry_sdk.init(
     integrations=integrations,
     environment=env("SENTRY_ENVIRONMENT", default="production"),
     traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0),
+    before_send=sentry_before_send
 )
 
 # Your stuff...
