@@ -1,0 +1,70 @@
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+
+
+<div id="app"></div>
+<div id="target"></div>
+
+</body>
+<script src="{% static 'js/@loomhq/loom-embed/index.js' %}"></script>
+<script src="{%  static 'js/@loomhq/record-sdk/index.js' %}"></script>
+
+<script>
+//   import { isSupported, setup } from "@loomhq/record-sdk";
+// import { oembed } from "@loomhq/loom-embed";
+
+// const PUBLIC_APP_ID = "public-app-id-obtained-from-developer-portal";
+
+const BUTTON_ID = "loom-record-sdk-button";
+
+function insertEmbedPlayer(html) {
+  const target = document.getElementById("target");
+
+  if (target) {
+    target.innerHTML = html;
+  }
+}
+
+async function init() {
+  const { supported, error } = await loomSdk.isSupported();
+
+  if (!supported) {
+    console.warn(`Error setting up Loom: ${error}`);
+    return;
+  }
+
+  const root = document.getElementById("app");
+
+  if (!root) {
+    return;
+  }
+
+  root.innerHTML = `<button id="${BUTTON_ID}">Record</button>`;
+
+  const button = document.getElementById(BUTTON_ID);
+
+  if (!button) {
+    return;
+  }
+
+  const { configureButton } = await loomSdk.setup({
+//     publicAppId: PUBLIC_APP_ID,
+    jws: "{{ jws }}"
+  });
+
+  const sdkButton = configureButton({ element: button });
+
+  sdkButton.on("insert-click", async (video) => {
+    const { html } = await loomEmbed.oembed(video.sharedUrl, { width: 400 });
+    insertEmbedPlayer(html);
+  });
+}
+
+init();
+</script>
+</html>
