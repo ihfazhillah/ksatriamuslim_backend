@@ -20,5 +20,5 @@ def try_loom(request):
             "exp": exp
         }
 
-        jws = jwt.encode(payloads, pem, "RS256")
+        jws = jwt.encode(payloads, pem.read(), algorithm="RS256")
         return render(request, "try_loom.html", {"jws": jws})
