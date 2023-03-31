@@ -1,25 +1,28 @@
 import datetime
 
 from django.db import models
-from django.utils.timezone import localtime
+from django.utils import timezone
 
 from ksatria_muslim.events.models import Event
-
-
-def serialize_event(event):
-    if not event:
-        return
-
-    return {"id": event.id}
+from ksatria_muslim.events.serializers.event import serialize_event
 
 
 class GetCurrentEvent:
     def get_current_event(self):
-        now_local = localtime()
+        now = timezone.now()
+
         events = Event.objects.all().annotate(
-            diff_1=models.F("started_at") - models.Value(now_local)
+            before_30=models.ExpressionWrapper(
+                models.F("started_at") - datetime.timedelta(minutes=30),
+                output_field=models.DateTimeField()
+            ),
+            after_30=models.ExpressionWrapper(
+                models.F("started_at") + datetime.timedelta(minutes=30),
+                output_field=models.DateTimeField()
+            ),
         ).filter(
-            diff_1__lte=datetime.timedelta(minutes=30)
+            before_30__lte=now,
+            after_30__gte=now
         )
 
         event = events.first()
