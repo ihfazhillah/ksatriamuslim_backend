@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from ksatria_muslim.books.api.views import BookViewSet, BookStateViewSet, force_generate_images
@@ -25,4 +25,5 @@ router.register("package-usage", PackageUsageViewSet)
 app_name = "api"
 urlpatterns = router.urls + [
     path("book-tools/force-generate-images/", force_generate_images, name="force-generate-images"),
+    path("events/", include("ksatria_muslim.events.urls", namespace="events")),
 ]
