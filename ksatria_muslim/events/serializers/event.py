@@ -51,3 +51,32 @@ def serialize_event(event):
 
     serializer = EventSerializer(instance=event)
     return serializer.data
+
+
+class EventListItemSerializer(serializers.ModelSerializer):
+    date = serializers.SerializerMethodField()
+    time = serializers.SerializerMethodField()
+
+    _date_fmt = "%A, %d %B %Y"
+    _time_fmt = "%H:%M %Z"
+
+    class Meta:
+        model = Event
+        fields = (
+            "id",
+            "thumbnail",
+            "title",
+            "date",
+            "time"
+        )
+
+    def get_date(self, obj):
+        return timezone.localtime(obj.started_at).strftime(self._date_fmt)
+
+    def get_time(self, obj):
+        return timezone.localtime(obj.started_at).strftime(self._time_fmt)
+
+
+def serialize_event_list_item(event):
+    serializer = EventListItemSerializer(instance=event)
+    return serializer.data
