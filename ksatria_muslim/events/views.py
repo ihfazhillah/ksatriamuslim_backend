@@ -8,7 +8,7 @@ from ksatria_muslim.events.di import event_composition_root
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_current_event(request):
-    current_event = event_composition_root.get_current_event_query.get_current()
+    current_event = event_composition_root.get_current_event_query.get_current_event()
     return Response(current_event)
 
 
