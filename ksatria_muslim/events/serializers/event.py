@@ -39,7 +39,7 @@ class EventSerializer(serializers.ModelSerializer):
         return obj.organizer.title
 
     def get_presenter(self, obj: Event):
-        return obj.presenter.get_full_name()
+        return obj.presenter.name
 
     def _localized_started_at(self, started_at):
         return timezone.localtime(started_at)
