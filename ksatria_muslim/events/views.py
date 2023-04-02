@@ -17,3 +17,10 @@ def get_current_event(request):
 def get_upcoming_events(request):
     upcoming_events = event_composition_root.get_upcoming_events_query.get_upcoming_events(limit=5)
     return Response(upcoming_events)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def get_event_detail(request, event_id):
+    upcoming_events = event_composition_root.get_event_detail_query.get_event(event_id)
+    return Response(upcoming_events)
