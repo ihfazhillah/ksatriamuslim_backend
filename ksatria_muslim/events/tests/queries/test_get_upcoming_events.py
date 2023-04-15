@@ -88,3 +88,19 @@ class TestGetCurrentEvent:
         event_1 = resp["events"][0]
         assert event_1["date"] == "Tuesday, 10 January 2023"
         assert event_1["time"] == "09:00 WIB"
+
+    @freezegun.freeze_time("2023-01-10 05:00 WIB")
+    def test_get_upcoming_events_paginated_page_1(self):
+        resp = self.SUT.get_upcoming_events(limit=1)
+        event_1 = resp["events"][0]
+        assert event_1["id"] == self.event_1.id
+        assert resp["has_next"]
+        assert resp["page"] == 1
+
+    @freezegun.freeze_time("2023-01-10 05:00 WIB")
+    def test_get_upcoming_events_paginated_page_2(self):
+        resp = self.SUT.get_upcoming_events(limit=1, page=2)
+        event_1 = resp["events"][0]
+        assert event_1["id"] == self.event_2.id
+        assert not resp["has_next"]
+        assert resp["page"] == 2

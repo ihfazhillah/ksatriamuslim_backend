@@ -13,7 +13,12 @@ def get_current_event(request):
 
 @api_view(["GET"])
 def get_upcoming_events(request):
-    upcoming_events = event_composition_root.get_upcoming_events_query.get_upcoming_events(limit=5)
+    page = int(request.GET.get("page", "1"))
+    limit = int(request.GET.get("limit", "5"))
+    upcoming_events = event_composition_root.get_upcoming_events_query.get_upcoming_events(
+        limit=limit,
+        page=page
+    )
     return Response(upcoming_events)
 
 
