@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.http import HttpRequest
 
-from ksatria_muslim.events.models import EventOrganizer, Event
+from ksatria_muslim.events.models import EventOrganizer, Event, EventPresenter
 
 admin.site.register(EventOrganizer, admin.ModelAdmin)
+admin.site.register(EventPresenter, admin.ModelAdmin)
 
 
 class EventAdmin(admin.ModelAdmin):
