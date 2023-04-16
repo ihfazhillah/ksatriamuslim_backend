@@ -10,13 +10,21 @@ class EventOrganizer(models.Model):
         return self.title
 
 
+class EventPresenter(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
 class Event(TimeStampedModel):
     title = models.CharField(max_length=255)
     thumbnail = models.ImageField(upload_to="events/")
     youtube_link = models.TextField(null=True, blank=True)
     zoom_link = models.TextField(null=True, blank=True)
 
-    presenter = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="event_presenters")
+    presenter = models.ForeignKey(EventPresenter, on_delete=models.CASCADE, related_name="event_presenters")
+
     submitter = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="submitted_events")
 
     organizer = models.ForeignKey(EventOrganizer, on_delete=models.CASCADE, related_name="events")
