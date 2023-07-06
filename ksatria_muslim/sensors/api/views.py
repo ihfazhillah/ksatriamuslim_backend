@@ -18,7 +18,7 @@ def log_sensor(request: Request):
     except Board.DoesNotExist:
         return Response({"error": "board not found"}, status=404)
 
-    sensor = Sensor.objects.get_or_create(
+    sensor, _ = Sensor.objects.get_or_create(
         board=board,
         label=serializer.validated_data["sensor"],
         type="Pir"
