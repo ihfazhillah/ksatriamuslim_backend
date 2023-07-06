@@ -7,6 +7,7 @@ from ksatria_muslim.children.api.views import ChildViewSet, PhotoProfileViewSet
 from ksatria_muslim.packages.api.views import PackageUsageViewSet
 from ksatria_muslim.rewards.api.views import RewardHistoryViewSet
 from ksatria_muslim.users.api.views import UserViewSet
+from ksatria_muslim.sensors.api.views import log_sensor
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -26,4 +27,5 @@ app_name = "api"
 urlpatterns = router.urls + [
     path("book-tools/force-generate-images/", force_generate_images, name="force-generate-images"),
     path("events/", include("ksatria_muslim.events.urls", namespace="events")),
+    path("log-sensor/", log_sensor, name="log-sensor"),
 ]
