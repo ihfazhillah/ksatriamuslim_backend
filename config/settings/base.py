@@ -95,7 +95,7 @@ LOCAL_APPS = [
     "ksatria_muslim.rewards",
     "ksatria_muslim.packages.apps.PackagesConfig",
     "ksatria_muslim.book_tracker.apps.BookTrackerApp",
-    "ksatria_muslim.events.apps.EventAppConfig"
+    "ksatria_muslim.events.apps.EventAppConfig",
     "ksatria_muslim.sensors.apps.SensorsAppConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
