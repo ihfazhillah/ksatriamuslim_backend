@@ -32,7 +32,7 @@ class BoardAdmin(admin.ModelAdmin):
 
 class SensorLogInline(admin.TabularInline):
     model = SensorLog
-    fields = ("message", "tracked_time")
+    fields = ("message", "tracked_date")
 
 
 @register(Sensor)
