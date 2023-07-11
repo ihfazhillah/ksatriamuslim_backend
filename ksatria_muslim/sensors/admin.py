@@ -7,7 +7,7 @@ from .models import Board, BoardLog, Sensor, SensorLog
 
 class BoardLogAdmin(admin.TabularInline):
     model = BoardLog
-    readonly_fields = ["created_at"]
+    readonly_fields = ["created"]
 
 
 @register(Board)
@@ -20,13 +20,13 @@ class BoardAdmin(admin.ModelAdmin):
 
     @admin.display(boolean=True)
     def is_active(self, obj):
-        latest_log = obj.logs.order_by("-created_at").first()
+        latest_log = obj.logs.order_by("-created").first()
 
         if not latest_log:
             return False
 
         now = timezone.now()
-        delta = now - latest_log.created_at
+        delta = now - latest_log.created
         return delta.seconds <= 30
 
 
