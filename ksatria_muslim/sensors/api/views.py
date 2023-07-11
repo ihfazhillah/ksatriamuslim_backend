@@ -49,7 +49,7 @@ def log_sensor(request: Request):
     localtime = timezone.localtime(serializer.validated_data["tracked_time"])
     fmt = "%d/%m/%Y %H:%M:%S WIB"
     send_telegram.delay(
-        text=f"Pergerakan terdeteksi di sensor '{sensor.label}'\n\n'{localtime.strftime(fmt)}'"
+        text=f"Pergerakan terdeteksi di sensor '{sensor.label}'\n\n{localtime.strftime(fmt)}"
     )
 
     return Response({"message": "ok"})
