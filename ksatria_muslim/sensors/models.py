@@ -28,3 +28,7 @@ class SensorLog(TimeStampedModel):
 
     # used for track date from the device
     tracked_date = models.DateTimeField(null=True, blank=True)
+
+
+class BoardLog(TimeStampedModel):
+    board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name="logs")
