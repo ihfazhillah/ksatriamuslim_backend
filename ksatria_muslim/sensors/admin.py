@@ -9,10 +9,8 @@ class BoardLogAdmin(admin.TabularInline):
     extra = 0
     model = BoardLog
     readonly_fields = ["created"]
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request).order_by("-created")
-        return qs[:10]
+    max_num = 10
+    ordering = ["-created"]
 
 
 @register(Board)
@@ -38,10 +36,9 @@ class BoardAdmin(admin.ModelAdmin):
 class SensorLogInline(admin.TabularInline):
     model = SensorLog
     fields = ("message", "tracked_date")
+    max_num = 10
+    ordering = ["-tracked_date"]
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request).order_by("-tracked_date")
-        return qs[:10]
 
 
 @register(Sensor)
