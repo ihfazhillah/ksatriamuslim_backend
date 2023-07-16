@@ -20,6 +20,10 @@ def record_and_send_video(cctv_label, caption):
         print("Cannot get cctv by it's label")
         return
 
+    if cctv.is_busy:
+        print("Cannot record, cctv is in busy state")
+        return
+
     cctv.is_busy = True
     cctv.save()
 
@@ -33,4 +37,7 @@ def record_and_send_video(cctv_label, caption):
         requests.post(url, data=data, files={"video": f.read()})
 
     streamer.clean()
+
+    cctv.is_busy = False
+    cctv.save()
 
