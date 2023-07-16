@@ -32,3 +32,26 @@ class SensorLog(TimeStampedModel):
 
 class BoardLog(TimeStampedModel):
     board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name="logs")
+
+
+
+class ImouAccount(TimeStampedModel):
+    appid = models.TextField()
+    appsecret = models.TextField()
+    label = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.label
+
+
+class CCTVCamera(TimeStampedModel):
+    label = models.CharField(max_length=255)
+    camera_id = models.CharField(max_length=255)
+
+    is_busy = models.BooleanField(default=False)
+    stream_url = models.TextField(null=True, blank=True)
+
+    account = models.ForeignKey(ImouAccount, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.label
