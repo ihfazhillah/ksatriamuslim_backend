@@ -11,6 +11,12 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 base_path = os.path.dirname(__file__)
 
+import requests
+
+class RequestsClient():
+    def download(self, uri, timeout=None, headers={}, verify_ssl=True):
+        o = requests.get(uri, timeout=timeout, headers=headers)
+        return o.text, o.url
 
 class M3U8Stream:
     BASE_PATH = os.path.join(base_path, "streams")
@@ -33,7 +39,7 @@ class M3U8Stream:
                 print("timeout")
                 break
 
-            remote_playlists = m3u8.load(url)
+            remote_playlists = m3u8.load(url, http_client=RequestsClient())
             print(f"downloading playlist url, got : {len(remote_playlists.files)}")
 
             for file_url in remote_playlists.files:
