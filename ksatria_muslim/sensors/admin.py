@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import register
 from django.utils import timezone
 
-from .models import Board, BoardLog, Sensor, SensorLog
+from .models import Board, BoardLog, Sensor, SensorLog, ImouAccount, CCTVCamera
 
 
 class BoardLogAdmin(admin.TabularInline):
@@ -45,3 +45,12 @@ class SensorLogInline(admin.TabularInline):
 class SensorAdmin(admin.ModelAdmin):
     list_display = ["label", "type", "board"]
     inlines = [SensorLogInline]
+
+class CameraAdminInline(admin.TabularInline):
+    model = CCTVCamera
+    extra = 0
+
+@register(ImouAccount)
+class ImouAccountAdmin(admin.ModelAdmin):
+    list_display = ["label"]
+    inlines = [CameraAdminInline]
