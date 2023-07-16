@@ -13,7 +13,7 @@ def send_telegram(text):
     resp.close()
 
 
-@celery_app.task()
+@celery_app.task(soft_time_limit=180, time_limit=180)
 def record_and_send_video(cctv_label, caption):
     cctv = CCTVCamera.objects.filter(label=cctv_label).first()
     if not cctv:
