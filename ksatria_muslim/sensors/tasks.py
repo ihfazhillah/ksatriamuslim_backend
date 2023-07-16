@@ -27,17 +27,19 @@ def record_and_send_video(cctv_label, caption):
     cctv.is_busy = True
     cctv.save()
 
-    streamer = sensors_composition_root.streamer
-    streamer.download(cctv.stream_url)
-    streamer.concat_playlists()
+    try:
 
-    url = "https://api.telegram.org/bot6324872661:AAHMdxRtdPOWbmfvOuW4gHpeg3eOmPXSUQs/sendVideo"
-    data = {"chat_id": "-1001376891793", "caption": caption}
-    with open(streamer.output_file, "rb") as f:
-        requests.post(url, data=data, files={"video": f.read()})
+        streamer = sensors_composition_root.streamer
+        streamer.download(cctv.stream_url)
+        streamer.concat_playlists()
 
-    streamer.clean()
+        url = "https://api.telegram.org/bot6324872661:AAHMdxRtdPOWbmfvOuW4gHpeg3eOmPXSUQs/sendVideo"
+        data = {"chat_id": "-1001376891793", "caption": caption}
+        with open(streamer.output_file, "rb") as f:
+            requests.post(url, data=data, files={"video": f.read()})
 
-    cctv.is_busy = False
-    cctv.save()
+        streamer.clean()
+    finally:
+        cctv.is_busy = False
+        cctv.save()
 
