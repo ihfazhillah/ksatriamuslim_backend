@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from .serializers import SensorLogSerializer, BoardLogSerializer
 from ..models import Board, Sensor, SensorLog, BoardLog
-from ..tasks import send_telegram
+from ..tasks import send_telegram, record_and_send_video
 
 
 @api_view(["POST"])
@@ -21,6 +21,10 @@ def ping_device(request: Request):
 
     BoardLog.objects.create(board=board)
     return Response({"message": "pong"})
+
+
+# hardcoded cctv label
+CCTV_LABEL = "selatan"
 
 
 @api_view(["POST"])
@@ -51,5 +55,7 @@ def log_sensor(request: Request):
     send_telegram.delay(
         text=f"Pergerakan terdeteksi di sensor '{sensor.label}'\n\n{localtime.strftime(fmt)}"
     )
+
+    record_and_send_video.delay(CCTV_LABEL, f"{sensor.label} - {localtime.strftime(fmt)}")
 
     return Response({"message": "ok"})

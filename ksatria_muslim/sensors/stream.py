@@ -15,9 +15,11 @@ base_path = os.path.dirname(__file__)
 class M3U8Stream:
     BASE_PATH = os.path.join(base_path, "streams")
 
-    def __init__(self):
+    def __init__(self, timeout=60):
+
         # in seconds
-        self.timeout = 120
+        self.timeout = timeout
+
         self.playlists = []
         self.output_fname = ""
 
@@ -83,8 +85,7 @@ class M3U8Stream:
         for f in files:
             os.remove(f)
 
-    def run(self, url):
-        self.download(url)
-        self.concat_playlists()
-        # self.clean()
+    @property
+    def output_file(self):
+        return self.output_fname
 
