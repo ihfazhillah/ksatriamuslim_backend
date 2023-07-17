@@ -74,6 +74,10 @@ class M3U8Stream:
             key = int(f.split(".")[0].rsplit("_", 1)[1])
             return int(key)
 
+        if not self.playlists:
+            print("No playlist downloaded, skip")
+            return
+
         sorted_playlist = sorted(self.playlists, key=sorter_key)
 
         clips = [VideoFileClip(os.path.join(self.BASE_PATH, f)) for f in sorted_playlist]
