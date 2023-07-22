@@ -31,7 +31,7 @@ def record_and_send_video(cctv_label, caption):
 
         streamer = sensors_composition_root.streamer
         streamer.download(cctv.stream_url)
-        streamer.concat_playlists()
+        streamer.ffmpeg_concat()
 
         url = "https://api.telegram.org/bot6324872661:AAHMdxRtdPOWbmfvOuW4gHpeg3eOmPXSUQs/sendVideo"
         data = {"chat_id": "-1001376891793", "caption": caption}

@@ -1,5 +1,6 @@
 import datetime
 import os.path
+import tempfile
 import traceback
 from urllib.parse import urlparse
 
@@ -8,6 +9,7 @@ import requests
 
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 
+from ksatria_muslim.utils.profiler import profile
 
 base_path = os.path.dirname(__file__)
 
@@ -31,7 +33,9 @@ class M3U8Stream:
 
         os.makedirs(self.BASE_PATH, exist_ok=True)
 
+    @profile
     def download(self, url):
+
         time = datetime.datetime.now()
         tick = datetime.datetime.now()
         while True:
@@ -69,6 +73,7 @@ class M3U8Stream:
 
             tick = datetime.datetime.now()
 
+    @profile
     def concat_playlists(self):
         def sorter_key(f):
             key = int(f.split(".")[0].rsplit("_", 1)[1])
@@ -80,12 +85,50 @@ class M3U8Stream:
 
         sorted_playlist = sorted(self.playlists, key=sorter_key)
 
-        clips = [VideoFileClip(os.path.join(self.BASE_PATH, f)) for f in sorted_playlist]
+        clips = []
+
+        for f in sorted_playlist:
+            try:
+                clips.append(VideoFileClip(os.path.join(self.BASE_PATH, f)))
+            except IndexError:
+                pass
+
         concatenated_clips = concatenate_videoclips(clips)
 
         output_fname = os.path.join(self.BASE_PATH, "output.mp4")
         concatenated_clips.write_videofile(output_fname)
         self.output_fname = output_fname
+
+    @profile
+    def ffmpeg_concat(self):
+        def sorter_key(f):
+            key = int(f.split(".")[0].rsplit("_", 1)[1])
+            return int(key)
+
+        if not self.playlists:
+            print("No playlist downloaded, skip")
+            return
+
+        sorted_playlist = sorted(self.playlists, key=sorter_key)
+
+        tmp = tempfile.NamedTemporaryFile("w", delete=False)
+
+        for f in sorted_playlist:
+            tmp.write(f"file '{os.path.join(self.BASE_PATH, f)}'\n")
+
+        tmp.close()
+
+        # tmp.seek(0)
+        # print(tmp.read())
+        # tmp.seek(0)
+
+        output_fname = os.path.join(self.BASE_PATH, "output.mp4")
+        # concatenated_clips.write_videofile(output_fname)
+
+        os.system(f"ffmpeg -y -f concat -safe 0 -i {tmp.name} -acodec copy -vcodec copy {output_fname}")
+        os.remove(tmp.name)
+        self.output_fname = output_fname
+
 
     def clean(self):
         files = [
