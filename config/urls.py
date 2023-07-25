@@ -41,7 +41,9 @@ urlpatterns += [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
-    path("try-loom/", try_loom),
+    path(
+        "sensors/", include("ksatria_muslim.sensors.urls", namespace="sensors")
+    )
 ]
 
 if settings.DEBUG:
