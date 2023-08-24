@@ -97,6 +97,7 @@ LOCAL_APPS = [
     "ksatria_muslim.book_tracker.apps.BookTrackerApp",
     "ksatria_muslim.events.apps.EventAppConfig",
     "ksatria_muslim.sensors.apps.SensorsAppConfig",
+    "ksatria_muslim.irrigation.apps.IrrigationAppConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
