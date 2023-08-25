@@ -37,6 +37,9 @@ class Schedule(TimeStampedModel):
     time = models.TimeField()
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.place} - {self.time}"
+
 
 class RunHistory(TimeStampedModel):
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, null=True)
