@@ -85,6 +85,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "adminsortable2",
+    "dmqtt",
 ]
 
 LOCAL_APPS = [
@@ -359,3 +360,9 @@ BOOK_STORAGE_MEDIA = str(APPS_DIR / "books_media")
 
 LOOM_SDK_PEM = env.str("LOOM_SDK_PEM", default="hello")
 LOOM_PUBLIC_ID = env.str("LOOM_PUBLIC_ID", default="hello")
+
+MQTT_USER = env.str("MQTT_USER", default="hello")
+MQTT_PASS = env.str("MQTT_PASSWORD", default="hello")
+MQTT_HOST = env.str("MQTT_HOST", default="hello")
+MQTT_PORT = env.int("MQTT_PORT", default=1000)
+

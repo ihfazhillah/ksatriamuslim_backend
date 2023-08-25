@@ -30,6 +30,7 @@ class Device(TimeStampedModel):
 class DeviceHistory(TimeStampedModel):
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
     value_int = models.IntegerField()
+    value_float = models.FloatField()
 
 
 class Schedule(TimeStampedModel):
