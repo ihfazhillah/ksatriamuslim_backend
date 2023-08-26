@@ -27,7 +27,10 @@ class DeviceAdmin(admin.ModelAdmin):
         histories = DeviceHistory.objects.filter(device=obj).order_by("-created").first()
         if not histories:
             return ""
-        return histories.value_int
+        if histories.value_int:
+            return histories.value_int
+        if histories.value_float:
+            return histories.value_float
 
 
 @admin.register(RunHistory)
