@@ -43,6 +43,8 @@ def handle_feeding_schedule(match, msg, **kwargs):
             schedule = Schedule.objects.get(place=place, index=int(value))
         except Schedule.DoesNotExist:
             schedule = None
+        except ValueError:
+            schedule = None
 
         RunHistory.objects.create(schedule=schedule)
 
