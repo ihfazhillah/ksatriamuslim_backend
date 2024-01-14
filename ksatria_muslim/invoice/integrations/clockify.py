@@ -5,7 +5,6 @@ import typing
 
 import pytz
 import requests
-from docutils.nodes import entry
 
 
 @dataclasses.dataclass
