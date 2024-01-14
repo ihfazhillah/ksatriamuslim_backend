@@ -6,6 +6,7 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.templatetags import static
+from django.views.decorators.csrf import csrf_exempt
 from weasyprint import HTML, CSS
 from weasyprint.css import find_stylesheets
 from weasyprint.text.fonts import FontConfiguration
@@ -39,6 +40,7 @@ def invoice_test(request):
     return render(request, "invoice/test-invoice.html", {"invoice": invoice})
 
 
+@csrf_exempt
 def webhook_test(request: HttpRequest):
     headers = request.headers
     body = request.body
