@@ -40,7 +40,7 @@ def invoice_test(request):
 
 
 def webhook_test(request: HttpRequest):
-    headers = request.headers, indent=2
+    headers = request.headers
     body = request.body
     post = request.POST
 
