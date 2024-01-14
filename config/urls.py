@@ -43,6 +43,9 @@ urlpatterns += [
     ),
     path(
         "sensors/", include("ksatria_muslim.sensors.urls", namespace="sensors")
+    ),
+    path(
+        "invoice/", include("ksatria_muslim.invoice.urls"),
     )
 ]
 

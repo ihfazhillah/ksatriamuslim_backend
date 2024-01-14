@@ -1,0 +1,152 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" >
+  <title>Document</title>
+  <style>
+
+    .invoice {
+      margin-top: 100px;
+    }
+
+    .company {
+      margin-bottom: 28px;
+    }
+
+    .company p {
+      margin-bottom: 8px;
+    }
+
+    .client,.detail, .line-items, .total {
+      margin-bottom: 28px;
+    }
+
+    @page {
+  margin: 3cm;
+  @bottom-left {
+    color: #1ee494;
+    content: '♥ Thank you!';
+  }
+  @bottom-right {
+    color: #a9a;
+    content: 'contact@courtbouillon.org | courtbouillon.org';
+    font-size: 9pt;
+  }
+}
+
+
+
+
+
+    h3.line {
+      width:100%;
+      text-align:center;
+      border-bottom: 1px solid #000;
+      line-height:0.1em;
+      margin:10px 0 28px;
+    }
+
+    h3.line span {
+      background:#fff;
+      padding:0 10px;
+    }
+
+    body {
+      max-width: 767px;
+    }
+
+
+  </style>
+</head>
+<body>
+
+<div class="invoice">
+
+  <div class="company">
+    <p class="fw-bold text-end">{{ invoice.company.name }}</p>
+    <p class="text-end">{{ invoice.company.email }}</p>
+  </div>
+
+  <h3 class="line"><span>INVOICE</span></h3>
+
+  <div class="row">
+    <div class="col-md-6 client">
+      <h6>Bill To</h6>
+      <table>
+        <tr>
+          <td class="fw-bold">{{ invoice.client.name }}</td>
+        </tr>
+        <tr>
+          <td>{{ invoice.client.email }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="col-md-6 detail fw-light">
+      <table class="table float-end table-bordered">
+        <tr>
+          <td class="key table-success">Invoice</td>
+          <td class="value">{{ invoice.number }}</td>
+        </tr>
+        <tr>
+          <td class="key table-success">Date</td>
+          <td class="value">{{ invoice.date|date:'d/m/Y' }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="row line-items fw-light">
+    <div class="col">
+      <table class="table table-bordered">
+        <thead class="table-success">
+        <tr>
+          <th class="text-center">#</th>
+          <th>Description</th>
+          <th class="text-end">Price</th>
+          <th class="text-end">Qty</th>
+          <th class="text-end">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for line_item in invoice.line_items %}
+          <tr>
+            <td class="text-center">{{ forloop.counter }}</td>
+            <td>{{ line_item.description }}</td>
+            <td class="text-end">{{ line_item.price }}</td>
+            <td class="text-end">{{ line_item.qty }}</td>
+            <td class="text-end">{{ line_item.total }}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<div class="row total fw-light">
+  <div class="col-md-6"><p>Thanks for your business</p></div>
+  <div class="col-md-6">
+    <table class="table float-end fw-bold">
+      <tr >
+        <td><strong>Total</strong></td>
+        <td class="text-end"><strong>{{ invoice.currency.symbol }}{{ invoice.total }}</strong></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="row additional-info fw-light">
+  <p>Wise Account <a href="https://wise.com/share/muhammadi404" target="_blank">https://wise.com/share/muhammadi404</a></p>
+</div>
+
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

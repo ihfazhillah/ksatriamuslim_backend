@@ -86,6 +86,8 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "adminsortable2",
     "dmqtt",
+    'dynamic_preferences',
+    'dynamic_preferences.users.apps.UserPreferencesConfig',
 ]
 
 LOCAL_APPS = [
@@ -99,6 +101,7 @@ LOCAL_APPS = [
     "ksatria_muslim.events.apps.EventAppConfig",
     "ksatria_muslim.sensors.apps.SensorsAppConfig",
     "ksatria_muslim.irrigation.apps.IrrigationAppConfig",
+    "ksatria_muslim.invoice"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
