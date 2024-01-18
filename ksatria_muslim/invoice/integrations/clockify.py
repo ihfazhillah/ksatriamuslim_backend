@@ -1,6 +1,7 @@
 import dataclasses
 import datetime
 import enum
+import pprint
 import typing
 
 import pytz
@@ -28,6 +29,8 @@ class ClockifyTimeEntry:
     # we need it to convert it into name later
     project_id: str
     entry_id: str
+
+    project_name: str = ""
 
 
 DataType = typing.TypeVar("DataType")
@@ -68,6 +71,32 @@ class ErrorResult(Result):
         self.error = result_error
 
 
+def parse_time_entry(entry) -> ClockifyTimeEntry:
+    fmt = "%Y-%m-%dT%H:%M:%SZ"
+    start_str = entry["timeInterval"]["start"]
+    end_str = entry["timeInterval"]["end"]
+    started = datetime.datetime.strptime(start_str, fmt).replace(tzinfo=pytz.UTC)
+    ended = datetime.datetime.strptime(end_str, fmt).replace(tzinfo=pytz.UTC)
+
+    project = entry.get("project")
+    if not project:
+        project_id = entry["projectId"]
+        project_name = None
+    else:
+        project_id = project["id"]
+        project_name = project["name"]
+
+    return ClockifyTimeEntry(
+        description=entry["description"],
+        started=started,
+        ended=ended,
+        duration=ended - started,
+        project_id=project_id,
+        entry_id=entry["id"],
+        project_name=project_name
+    )
+
+
 class Client:
     def __init__(self, config: ClockifyConfig):
         self.config = config
@@ -101,25 +130,9 @@ class Client:
                 return ErrorResult(ResultError(resp.text, ResultErrorType.server_error))
 
             data = resp.json()
-            entries = [self._parse_time_entry(entry) for entry in data]
+            entries = [parse_time_entry(entry) for entry in data]
             return SuccessResult(entries)
 
         except Exception as e:
             return ErrorResult(ResultError(str(e), ResultErrorType.client_error))
-
-    def _parse_time_entry(self, entry) -> ClockifyTimeEntry:
-        fmt = "%Y-%m-%dT%H:%M:%SZ"
-        start_str = entry["timeInterval"]["start"]
-        end_str = entry["timeInterval"]["end"]
-        started = datetime.datetime.strptime(start_str, fmt).replace(tzinfo=pytz.UTC)
-        ended = datetime.datetime.strptime(end_str, fmt).replace(tzinfo=pytz.UTC)
-
-        return ClockifyTimeEntry(
-            description=entry["description"],
-            started=started,
-            ended=ended,
-            duration=ended - started,
-            project_id=entry["projectId"],
-            entry_id=entry["id"],
-        )
 

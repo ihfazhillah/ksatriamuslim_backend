@@ -69,6 +69,13 @@ class ClockifyIntegration(TimeStampedModel):
         return f"{self.workspace_name} - {self.project_name} - {self.project_name}"
 
 
+class ClockifyWebhookIntegration(TimeStampedModel):
+    name = models.CharField(max_length=255)
+    key = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    event_key = models.CharField(max_length=255)
+
+
 # Used for webhook test, anything
 class WebhookTest(TimeStampedModel):
     body = models.TextField(null=True, blank=True)
