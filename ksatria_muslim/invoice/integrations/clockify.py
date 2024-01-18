@@ -76,7 +76,11 @@ def parse_time_entry(entry) -> ClockifyTimeEntry:
     start_str = entry["timeInterval"]["start"]
     end_str = entry["timeInterval"]["end"]
     started = datetime.datetime.strptime(start_str, fmt).replace(tzinfo=pytz.UTC)
-    ended = datetime.datetime.strptime(end_str, fmt).replace(tzinfo=pytz.UTC)
+
+    if not end_str:
+        ended = None
+    else:
+        ended = datetime.datetime.strptime(end_str, fmt).replace(tzinfo=pytz.UTC)
 
     project = entry.get("project")
     if not project:
