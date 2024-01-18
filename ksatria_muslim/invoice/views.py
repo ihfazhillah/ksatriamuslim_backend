@@ -76,7 +76,7 @@ def webhook(request: HttpRequest):
 
     entry = parse_time_entry(body)
     integration = ClockifyIntegration.objects.filter(
-        user=webhook_integration.user,
+        integrated_project__user=webhook_integration.user,
         project_id=entry.project_id
     ).first()
     if not integration:
