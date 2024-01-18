@@ -87,3 +87,7 @@ class ClockifyIntegrationAdmin(admin.ModelAdmin):
 class WebhookTestAdmin(admin.ModelAdmin):
     list_display = ("body", "post", "headers", "created")
 
+
+@admin.register(models.ClockifyWebhookIntegration)
+class ClockifyWebhookIntegration(admin.ModelAdmin):
+    list_display = ("name", "key", "event_key", "user")
