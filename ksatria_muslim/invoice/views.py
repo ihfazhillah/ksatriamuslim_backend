@@ -1,4 +1,5 @@
 import datetime
+import decimal
 import json
 from functools import reduce
 
@@ -130,7 +131,7 @@ def simple_list_non_locked_time_entries(request):
             "description": project.name,
             "rate": project.rate,
             "qty": total_hours,
-            "total": total_hours * project.rate
+            "total": decimal.Decimal(total_hours) * project.rate
         })
 
     total_usd = reduce(lambda acc, item: acc + item["total"], data, 0)
@@ -143,7 +144,7 @@ def simple_list_non_locked_time_entries(request):
     except Exception:
         currency = 1
 
-    total_idr = currency * total_usd
+    total_idr = decimal.Decimal(currency) * total_usd
 
     return render(request, "invoice/simple_non_locked.html", {
         "data": data,
