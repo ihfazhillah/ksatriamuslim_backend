@@ -28,15 +28,15 @@
       <tr>
         <td>{{ item.description }}</td>
         <td>{{ item.rate }}</td>
-        <td>{{ item.qty }}</td>
-        <td>{{ item.total }}</td>
+        <td>{{ item.qty|floatformat:"2g" }}</td>
+        <td>{{ item.total|floatformat:"2g" }}</td>
       </tr>
     {% endfor %}
     </tbody>
   </table>
 
-  <p class="lead">Total USD: {{ total_usd }}</p>
-  <p class="lead">Total IDR: {{ total_idr }} Rate USD to IDR: {{ currency }}</p>
+  <p class="lead">Total USD: {{ total_usd|floatformat:"2g" }}</p>
+  <p class="lead">Total IDR: {{ total_idr|floatformat:"2g" }} Rate USD to IDR: {{ currency|floatformat:"2g" }}</p>
 </div>
 
 </body>
