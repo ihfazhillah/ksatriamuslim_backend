@@ -1,7 +1,10 @@
 import datetime
 import json
+from functools import reduce
 
+import requests
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.template.loader import render_to_string
@@ -14,7 +17,8 @@ from weasyprint.text.fonts import FontConfiguration
 from ksatria_muslim.invoice.domain.data import Invoice, Company, Client, LineItem, Unit, Currency
 from ksatria_muslim.invoice.integrations.clockify import parse_time_entry
 from ksatria_muslim.invoice.integrations.converters import Clockify
-from ksatria_muslim.invoice.models import WebhookTest, ClockifyWebhookIntegration, ClockifyIntegration, TimeEntry
+from ksatria_muslim.invoice.models import WebhookTest, ClockifyWebhookIntegration, ClockifyIntegration, TimeEntry, \
+    Project
 
 
 def invoice_test(request):
@@ -108,3 +112,43 @@ def webhook(request: HttpRequest):
         time_entry.save()
 
     return JsonResponse({"success": True})
+
+
+@login_required
+def simple_list_non_locked_time_entries(request):
+    """
+    Tujuannya untuk nampilkan sementara
+    """
+    projects = Project.objects.all()
+    data = []
+
+    for project in projects:
+        entries = project.timeentry_set.filter(locked=False)
+        total_duration = reduce(lambda acc, entry: acc + entry.duration, entries, datetime.timedelta())
+        total_hours = total_duration.total_seconds() / 3600
+        data.append({
+            "description": project.name,
+            "rate": project.rate,
+            "qty": total_hours,
+            "total": total_hours * project.rate
+        })
+
+    total_usd = reduce(lambda acc, item: acc + item["total"], data, 0)
+
+    try:
+        url = f"https://api.freecurrencyapi.com/v1/latest?apikey={settings.FREE_CURRENCY_API_KEY}&currencies=IDR"
+        response = requests.get(url)
+        response_data = response.json()
+        currency = response_data["data"]["IDR"]
+    except Exception:
+        currency = 1
+
+    total_idr = currency * total_usd
+
+    return render(request, "invoice/simple_non_locked.html", {
+        "data": data,
+        "total_usd": total_usd,
+        "total_idr": total_idr,
+        "currency": currency
+    })
+

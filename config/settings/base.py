@@ -369,3 +369,5 @@ MQTT_PASS = env.str("MQTT_PASSWORD", default="hello")
 MQTT_HOST = env.str("MQTT_HOST", default="hello")
 MQTT_PORT = env.int("MQTT_PORT", default=1000)
 
+
+FREE_CURRENCY_API_KEY = env.str("FREE_CURRENCY_API_KEY", default="")
