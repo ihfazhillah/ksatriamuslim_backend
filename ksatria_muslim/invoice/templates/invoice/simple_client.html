@@ -1,0 +1,9 @@
+<h4>
+  Clients
+</h4>
+
+<ol>
+  {% for client in clients %}
+    <a href="{% url 'invoice:simple-list' client.id %}">{{ client.name }}</a>
+  {% endfor %}
+</ol>

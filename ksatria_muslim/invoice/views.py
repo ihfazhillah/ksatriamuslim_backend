@@ -19,7 +19,7 @@ from ksatria_muslim.invoice.domain.data import Invoice, Company, Client, LineIte
 from ksatria_muslim.invoice.integrations.clockify import parse_time_entry
 from ksatria_muslim.invoice.integrations.converters import Clockify
 from ksatria_muslim.invoice.models import WebhookTest, ClockifyWebhookIntegration, ClockifyIntegration, TimeEntry, \
-    Project
+    Project, Client as ClientModel
 
 
 def invoice_test(request):
@@ -116,11 +116,18 @@ def webhook(request: HttpRequest):
 
 
 @login_required
-def simple_list_non_locked_time_entries(request):
+def simple_client_list(request):
+    clients = ClientModel.objects.all()
+    return render(request, "invoice/simple_client.html", context={"clients": clients})
+
+
+@login_required
+def simple_list_non_locked_time_entries(request, client_id):
     """
     Tujuannya untuk nampilkan sementara
     """
-    projects = Project.objects.all()
+    client = ClientModel.objects.get(id=client_id)
+    projects = Project.objects.filter(client_id=client_id)
     data = []
 
     for project in projects:
@@ -137,10 +144,13 @@ def simple_list_non_locked_time_entries(request):
     total_usd = reduce(lambda acc, item: acc + item["total"], data, 0)
 
     try:
-        url = f"https://api.freecurrencyapi.com/v1/latest?apikey={settings.FREE_CURRENCY_API_KEY}&currencies=IDR"
-        response = requests.get(url)
-        response_data = response.json()
-        currency = response_data["data"]["IDR"]
+        if client.should_convert:
+            url = f"https://api.freecurrencyapi.com/v1/latest?apikey={settings.FREE_CURRENCY_API_KEY}&currencies=IDR"
+            response = requests.get(url)
+            response_data = response.json()
+            currency = response_data["data"]["IDR"]
+        else:
+            currency = 1
     except Exception:
         currency = 1
 
@@ -150,6 +160,7 @@ def simple_list_non_locked_time_entries(request):
         "data": data,
         "total_usd": total_usd,
         "total_idr": total_idr,
-        "currency": currency
+        "currency": currency,
+        "client": client
     })
 

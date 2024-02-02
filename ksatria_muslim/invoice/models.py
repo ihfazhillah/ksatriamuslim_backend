@@ -12,6 +12,9 @@ class Client(TimeStampedModel):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    # untuk sementara per client untuk konversian
+    should_convert = models.BooleanField(default=True)
+
     def __str__(self):
         return self.name
 

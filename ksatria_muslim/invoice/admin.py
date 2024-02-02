@@ -37,6 +37,7 @@ class TimeEntryModel(admin.ModelAdmin):
     list_display = ("project", "description", "started_at", "ended_at", "duration", "locked", "locked_at")
     ordering = ("-started_at",)
     actions = [lock_selected_entries, unlock_selected_entries]
+    list_filter = ("locked", "project__client")
 
 
 class ClockifyTimeEntryTransformer:

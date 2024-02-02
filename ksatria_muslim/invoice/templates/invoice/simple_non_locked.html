@@ -35,8 +35,12 @@
     </tbody>
   </table>
 
-  <p class="lead">Total USD: {{ total_usd|floatformat:"2g" }}</p>
-  <p class="lead">Total IDR: {{ total_idr|floatformat:"2g" }} Rate USD to IDR: {{ currency|floatformat:"2g" }}</p>
+  {% if client.should_convert %}
+    <p class="lead">Total USD: {{ total_usd|floatformat:"2g" }}</p>
+    <p class="lead">Total IDR: {{ total_idr|floatformat:"2g" }} Rate USD to IDR: {{ currency|floatformat:"2g" }}</p>
+  {% else %}
+    <p class="lead">Total: {{ total_idr|floatformat:"2g" }}</p>
+  {% endif %}
 </div>
 
 </body>
