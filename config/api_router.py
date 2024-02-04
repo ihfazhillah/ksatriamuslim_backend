@@ -27,6 +27,7 @@ app_name = "api"
 urlpatterns = router.urls + [
     path("book-tools/force-generate-images/", force_generate_images, name="force-generate-images"),
     path("events/", include("ksatria_muslim.events.urls", namespace="events")),
+    path("children-tasks/", include("ksatria_muslim.children_task.urls")),
 
     # sensors
     path("log-sensor/", log_sensor, name="log-sensor"),
