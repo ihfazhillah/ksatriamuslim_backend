@@ -40,7 +40,7 @@ class ChildSerializer(serializers.ModelSerializer):
 def get_children(request):
     children = Child.objects.filter(parent=request.user)
     serializer = ChildSerializer(children, many=True, context={"request": request})
-    return Response({"children": serializer.data})
+    return Response({"profiles": serializer.data})
 
 
 def serialize_task(history: TaskHistory):
