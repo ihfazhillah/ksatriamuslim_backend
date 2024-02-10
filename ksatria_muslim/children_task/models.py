@@ -14,6 +14,8 @@ class Task(TimeStampedModel):
     children = models.ManyToManyField(Child)
     scheduled_at = models.TimeField(null=True, blank=True)
 
+    image = models.ImageField(null=True, blank=True)
+
     def __str__(self):
         return self.title
 
