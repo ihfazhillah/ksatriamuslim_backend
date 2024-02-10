@@ -43,18 +43,26 @@ def get_children(request):
     return Response({"profiles": serializer.data})
 
 
-def serialize_task(history: TaskHistory):
+def serialize_task(history: TaskHistory, request=None):
+
+    image_url = ""
+    if history.task.image:
+        image_url = history.task.image.url
+        if request:
+            image_url = request.build_absolute_uri(image_url)
+
     return {
         "id": history.id,
         "title": history.task.title,
-        "status": history.status
+        "status": history.status,
+        "image": image_url
     }
 
 
 @api_view(["GET"])
 def get_task_list(request, child_id):
     tasks = get_children_tasks(child_id)
-    return Response({"tasks": [serialize_task(task) for task in tasks]})
+    return Response({"tasks": [serialize_task(task, request) for task in tasks]})
 
 
 @api_view(["POST"])
@@ -68,4 +76,4 @@ def mark_as_finished(request):
         task.status = TaskHistory.STATUS.finished
 
     task.save()
-    return Response({"task": serialize_task(task)})
+    return Response({"task": serialize_task(task, request)})
