@@ -9,7 +9,9 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ("title", "image_display")
 
     def image_display(self, obj):
-        return mark_safe(f"<img src='{obj.image.url}' width='100'/>")
+        if obj.image:
+            return mark_safe(f"<img src='{obj.image.url}' width='100'/>")
+        return ""
 
     image_display.short_description = "Image Preview"
     image_display.allow_tags = True
