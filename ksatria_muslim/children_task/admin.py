@@ -24,5 +24,5 @@ class TaskHistoryAdmin(admin.ModelAdmin):
     actions = ["mark_as_done"]
 
     @admin.action(description="Mark as done")
-    def mark_as_done(self, qs):
+    def mark_as_done(self, request, qs):
         qs.update(status=TaskHistory.STATUS.finished)
