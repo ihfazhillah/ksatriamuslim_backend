@@ -1,11 +1,18 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
 from ksatria_muslim.children_task.models import Task, TaskHistory
 
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("title", "image_display")
+
+    def image_display(self, obj):
+        return mark_safe(f"<img src='{obj.image.url}' width='100'/>")
+
+    image_display.short_description = "Image Preview"
+    image_display.allow_tags = True
 
 
 @admin.register(TaskHistory)
