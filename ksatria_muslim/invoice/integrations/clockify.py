@@ -90,11 +90,16 @@ def parse_time_entry(entry) -> ClockifyTimeEntry:
         project_id = project["id"]
         project_name = project["name"]
 
+    if not ended:
+        duration = 0
+    else:
+        duration = ended - started
+
     return ClockifyTimeEntry(
         description=entry["description"],
         started=started,
         ended=ended,
-        duration=ended - started,
+        duration=duration,
         project_id=project_id,
         entry_id=entry["id"],
         project_name=project_name
