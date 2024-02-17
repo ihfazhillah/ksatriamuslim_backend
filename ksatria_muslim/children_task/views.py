@@ -87,4 +87,5 @@ def confirm(request):
     task.status = TaskHistory.STATUS.finished
     task.save()
 
+
     return Response({"task": serialize_task(task, request)})
