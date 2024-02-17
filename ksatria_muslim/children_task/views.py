@@ -77,3 +77,13 @@ def mark_as_finished(request):
 
     task.save()
     return Response({"task": serialize_task(task, request)})
+
+
+@api_view(["POST"])
+def confirm(request):
+    task_id = request.data.get("task_id")
+    task = get_object_or_404(TaskHistory, id=task_id)
+    task.status = TaskHistory.STATUS.finished
+    task.save()
+
+    return Response({"task": serialize_task(task, request)})
