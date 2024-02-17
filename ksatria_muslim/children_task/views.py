@@ -62,6 +62,7 @@ def serialize_task(history: TaskHistory, request=None):
 @api_view(["GET"])
 def get_task_list(request, child_id):
     tasks = get_children_tasks(child_id)
+    tasks = sorted(tasks, key=lambda history: history.modified, reverse=True)
     return Response({"tasks": [serialize_task(task, request) for task in tasks]})
 
 
