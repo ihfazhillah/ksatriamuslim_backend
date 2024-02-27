@@ -29,10 +29,12 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
             self.respond(message_id)
 
     def respond(self, message_id, value = None, error = None):
+        result = {"error": error}
+        if value:
+            result["value"] = value
+
         self.send_json({
             "type": "callback",
             "id": message_id,
-            "result": {
-                "value": value, "error": error
-            }
+            "result": result
         })
