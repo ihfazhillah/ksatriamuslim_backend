@@ -19,6 +19,7 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
                 return
 
             self.respond(message_id)
+            return
 
         if _type == "get":
             try:
@@ -26,10 +27,12 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
                 self.respond(message_id, value=data.value)
             except Flowly.DoesNotExist:
                 self.respond(message_id, value=[])
+            return
 
         if _type == "set":
             Flowly.objects.update_or_create(defaults={"value": content.get("value")}, key=message_id)
             self.respond(message_id)
+            return
 
     def respond(self, message_id, value = None, error = None):
         result = {"error": error}
