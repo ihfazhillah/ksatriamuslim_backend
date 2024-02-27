@@ -34,23 +34,27 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
             return
 
         if _type == "set":
-            key = content.get("key")
-            value = content.get("value")
+            try:
+                key = content.get("key")
+                value = content.get("value")
 
-            if key == "save:lastID":
-                value = int(value)
+                if key == "save:lastID":
+                    value = int(value)
 
-            if key.endswith("children"):
-                value = json.loads(value)
-                value = [int(v) for v in value]
+                if key.endswith("children"):
+                    value = json.loads(value)
+                    value = [int(v) for v in value]
 
-            if key.endswith("parent"):
-                value = json.loads(value)
-                value = [int(v) for v in value]
+                if key.endswith("parent"):
+                    value = json.loads(value)
+                    value = [int(v) for v in value]
 
-            Flowly.objects.update_or_create(defaults={"value": value}, key=key)
-            self.respond(message_id)
-            return
+                Flowly.objects.update_or_create(defaults={"value": value}, key=key)
+                self.respond(message_id)
+                return
+            except Exception as e:
+                self.respond(message_id, error=str(e))
+                return
 
     def respond(self, message_id, value = None, error = None):
         result = {"error": error}
