@@ -21,8 +21,11 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
             self.respond(message_id)
 
         if _type == "get":
-            data = Flowly.objects.get(key=message_id)
-            self.respond(message_id, value=data.value)
+            try:
+                data = Flowly.objects.get(key=message_id)
+                self.respond(message_id, value=data.value)
+            except Flowly.DoesNotExist:
+                self.respond(message_id, error="Data not found")
 
         if _type == "set":
             Flowly.objects.update_or_create(defaults={"value": content.get("value")}, key=message_id)
