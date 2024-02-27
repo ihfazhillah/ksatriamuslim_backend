@@ -38,7 +38,7 @@ application = ProtocolTypeRouter(
     {
         "http": django_application,
         "websocket": URLRouter([
-            path("ws/vim-flowly/", VimFlowlyConsumer.as_asgi(), name="vim-flowly-asgi"),
+            path("ws/vim-flowly/socket", VimFlowlyConsumer.as_asgi(), name="vim-flowly-asgi"),
         ])
     }
 )
