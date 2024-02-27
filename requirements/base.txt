@@ -34,3 +34,6 @@ m3u8
 django-mqtt==0.4.0
 weasyprint==60.2
 django-dynamic-preferences==1.15.0
+
+
+channels[daphne]==4.0.0

@@ -103,6 +103,7 @@ LOCAL_APPS = [
     "ksatria_muslim.irrigation.apps.IrrigationAppConfig",
     "ksatria_muslim.invoice",
     "ksatria_muslim.children_task",
+    "ksatria_muslim.vimflowly",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -372,3 +373,5 @@ MQTT_PORT = env.int("MQTT_PORT", default=1000)
 
 
 FREE_CURRENCY_API_KEY = env.str("FREE_CURRENCY_API_KEY", default="")
+
+VIM_FLOWLY_PASSWORD = env.str("VIM_FLOWLY_PASSWORD", default="supersecretpassword")
