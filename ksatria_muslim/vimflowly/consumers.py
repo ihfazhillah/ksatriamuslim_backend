@@ -26,6 +26,7 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
 
         if _type == "set":
             Flowly.objects.update_or_create(defaults={"value": content.get("value")}, key=message_id)
+            self.respond(message_id)
 
     def respond(self, message_id, value = None, error = None):
         self.send_json({
