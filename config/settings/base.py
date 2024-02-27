@@ -61,6 +61,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 # APPS
 # ------------------------------------------------------------------------------
 DJANGO_APPS = [
+    "daphne",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -70,7 +71,6 @@ DJANGO_APPS = [
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
-    "daphne",
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
@@ -374,5 +374,7 @@ MQTT_PORT = env.int("MQTT_PORT", default=1000)
 
 
 FREE_CURRENCY_API_KEY = env.str("FREE_CURRENCY_API_KEY", default="")
+
+ASGI_APPLICATION = "config.asgi.application"
 
 VIM_FLOWLY_PASSWORD = env.str("VIM_FLOWLY_PASSWORD", default="supersecretpassword")
