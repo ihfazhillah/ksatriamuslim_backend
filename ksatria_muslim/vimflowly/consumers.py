@@ -45,7 +45,7 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
                     value = json.loads(value)
                     value = [int(v) for v in value]
 
-                if key.endswith("parent"):
+                if key.endswith(":parent"):
                     value = json.loads(value)
                     value = [int(v) for v in value]
 
