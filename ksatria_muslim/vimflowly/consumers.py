@@ -1,3 +1,5 @@
+import json
+
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.conf import settings
 from ksatria_muslim.vimflowly.models import Flowly
@@ -32,7 +34,20 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
 
         if _type == "set":
             key = content.get("key")
-            Flowly.objects.update_or_create(defaults={"value": content.get("value")}, key=key)
+            value = content.get("value")
+
+            if key == "save:lastID":
+                value = int(value)
+
+            if key.endswith("children"):
+                value = json.loads(value)
+                value = [int(v) for v in value]
+
+            if key.endswith("parent"):
+                value = json.loads(value)
+                value = [int(v) for v in value]
+
+            Flowly.objects.update_or_create(defaults={"value": value}, key=key)
             self.respond(message_id)
             return
 
