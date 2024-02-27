@@ -16,7 +16,6 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from django.urls import path
 
-from ksatria_muslim.vimflowly.consumers import VimFlowlyConsumer
 
 # This allows easy placement of apps within the interior
 # ksatria_muslim directory.
@@ -25,13 +24,13 @@ sys.path.append(str(ROOT_DIR / "ksatria_muslim"))
 
 # If DJANGO_SETTINGS_MODULE is unset, default to the local settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")
-django.setup()
 
 # This application object is used by any ASGI server configured to use this file.
 django_application = get_asgi_application()
 # Apply ASGI middleware here.
 # from helloworld.asgi import HelloWorldApplication
 # application = HelloWorldApplication(application)
+from ksatria_muslim.vimflowly.consumers import VimFlowlyConsumer
 
 
 application = ProtocolTypeRouter(

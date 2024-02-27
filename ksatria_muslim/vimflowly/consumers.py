@@ -1,10 +1,10 @@
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.conf import settings
+from ksatria_muslim.vimflowly.models import Flowly
 
 
 class VimFlowlyConsumer(JsonWebsocketConsumer):
     def receive_json(self, content, **kwargs):
-        from ksatria_muslim.vimflowly.models import Flowly
 
         print(content)
 
