@@ -33,7 +33,7 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
 
     def respond(self, message_id, value = None, error = None):
         result = {"error": error}
-        if value:
+        if value is not None:
             result["value"] = value
 
         self.send_json({
