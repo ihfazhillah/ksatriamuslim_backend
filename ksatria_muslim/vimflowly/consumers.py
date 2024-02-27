@@ -21,6 +21,7 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
                 return
 
             self.respond(message_id)
+            self.send_json({"type": "joined", "clientId": content.get("clientId"), "docname": content.get("docname")})
             return
 
         if _type == "get":
