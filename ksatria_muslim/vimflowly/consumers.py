@@ -22,15 +22,17 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
             return
 
         if _type == "get":
+            key = content.get("key")
             try:
-                data = Flowly.objects.get(key=message_id)
+                data = Flowly.objects.get(key=key)
                 self.respond(message_id, value=data.value)
             except Flowly.DoesNotExist:
                 self.respond(message_id, value=[])
             return
 
         if _type == "set":
-            Flowly.objects.update_or_create(defaults={"value": content.get("value")}, key=message_id)
+            key = content.get("key")
+            Flowly.objects.update_or_create(defaults={"value": content.get("value")}, key=key)
             self.respond(message_id)
             return
 
