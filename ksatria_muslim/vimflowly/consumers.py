@@ -27,7 +27,7 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
         if _type == "get":
             key = content.get("key")
             with connection.cursor() as cursor:
-                query = "select value from vimflowly_flowly where key = '%s'"
+                query = "select value from vimflowly_flowly where key = %s"
                 cursor.execute(query, [key])
                 row = cursor.fetchone()
                 if row:
