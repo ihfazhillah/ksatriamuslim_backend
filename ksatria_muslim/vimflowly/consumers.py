@@ -40,16 +40,16 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
             key = content.get("key")
             value = content.get("value")
 
-            if key == "save:lastID":
-                value = int(value)
-
-            if key.endswith("children"):
-                value = json.loads(value)
-                value = [int(v) for v in value]
-
-            if key.endswith(":parent"):
-                value = json.loads(value)
-                value = [int(v) for v in value]
+            # if key == "save:lastID":
+            #     value = int(value)
+            #
+            # if key.endswith("children"):
+            #     value = json.loads(value)
+            #     value = [int(v) for v in value]
+            #
+            # if key.endswith(":parent"):
+            #     value = json.loads(value)
+            #     value = [int(v) for v in value]
 
             query = "insert into vimflowly_flowly (key, value) values (%s, %s) on conflict (key) do update set value = excluded.value"
             with connection.cursor() as cursor:
