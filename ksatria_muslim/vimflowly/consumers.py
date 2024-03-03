@@ -2,7 +2,7 @@ import json
 
 from channels.generic.websocket import JsonWebsocketConsumer
 from django.conf import settings
-from ksatria_muslim.vimflowly.models import Flowly
+from django.db import connection
 
 
 class VimFlowlyConsumer(JsonWebsocketConsumer):
@@ -26,35 +26,37 @@ class VimFlowlyConsumer(JsonWebsocketConsumer):
 
         if _type == "get":
             key = content.get("key")
-            try:
-                data = Flowly.objects.get(key=key)
-                self.respond(message_id, value=data.value)
-            except Flowly.DoesNotExist:
-                self.respond(message_id, value="null")
+            with connection.cursor() as cursor:
+                query = "select value from vimflowly_flowly where key = '%s'"
+                cursor.execute(query, [key])
+                row = cursor.fetchone()
+                if row:
+                    self.respond(message_id, value=row[0])
+                else:
+                    self.respond(message_id, value="null")
             return
 
         if _type == "set":
-            try:
-                key = content.get("key")
-                value = content.get("value")
+            key = content.get("key")
+            value = content.get("value")
 
-                if key == "save:lastID":
-                    value = int(value)
+            if key == "save:lastID":
+                value = int(value)
 
-                if key.endswith("children"):
-                    value = json.loads(value)
-                    value = [int(v) for v in value]
+            if key.endswith("children"):
+                value = json.loads(value)
+                value = [int(v) for v in value]
 
-                if key.endswith(":parent"):
-                    value = json.loads(value)
-                    value = [int(v) for v in value]
+            if key.endswith(":parent"):
+                value = json.loads(value)
+                value = [int(v) for v in value]
 
-                Flowly.objects.update_or_create(defaults={"value": value}, key=key)
-                self.respond(message_id)
-                return
-            except Exception as e:
-                self.respond(message_id, error=str(e))
-                return
+            query = "insert into vimflowly_flowly (key, value) values (%s, %s) on conflict (key) do update set value = excluded.value"
+            with connection.cursor() as cursor:
+                cursor.execute(query, [key, value])
+
+            self.respond(message_id)
+            return
 
     def respond(self, message_id, value = None, error = None):
         result = {"error": error}
