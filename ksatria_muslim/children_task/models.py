@@ -15,6 +15,7 @@ class Task(TimeStampedModel):
     scheduled_at = models.TimeField(null=True, blank=True)
 
     image = models.ImageField(null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.title
