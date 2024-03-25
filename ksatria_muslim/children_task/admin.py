@@ -1,7 +1,9 @@
+from adminsortable2.admin import SortableInlineAdminMixin
 from django.contrib import admin
+from django.contrib.admin import TabularInline
 from django.utils.safestring import mark_safe
 
-from ksatria_muslim.children_task.models import Task, TaskHistory
+from ksatria_muslim.children_task.models import Task, TaskHistory, TikrarItem, Tikrar
 
 
 @admin.register(Task)
@@ -26,3 +28,14 @@ class TaskHistoryAdmin(admin.ModelAdmin):
     @admin.action(description="Mark as done")
     def mark_as_done(self, request, qs):
         qs.update(status=TaskHistory.STATUS.finished)
+
+
+class TikrarItemAdmin(SortableInlineAdminMixin, TabularInline):
+    model = TikrarItem
+    ordering = ["index"]
+
+
+@admin.register(Tikrar)
+class TikrarAdmin(admin.ModelAdmin):
+    list_display = ["title", "max_tikrar", "version"]
+    inlines = [TikrarItemAdmin]
