@@ -1,6 +1,11 @@
+import json
+from io import StringIO
+
 from adminsortable2.admin import SortableInlineAdminMixin
 from django.contrib import admin
 from django.contrib.admin import TabularInline
+from django.core.files.base import ContentFile
+from django.core.files.storage import FileSystemStorage
 from django.utils.safestring import mark_safe
 
 from ksatria_muslim.children_task.models import Task, TaskHistory, TikrarItem, Tikrar
@@ -39,3 +44,22 @@ class TikrarItemAdmin(SortableInlineAdminMixin, TabularInline):
 class TikrarAdmin(admin.ModelAdmin):
     list_display = ["title", "max_tikrar", "version"]
     inlines = [TikrarItemAdmin]
+    actions = ["build"]
+
+    @admin.action(description="Build manifest")
+    def build(self, request, qs):
+        for tikrar in qs:
+
+            data = {
+                "title": tikrar.title,
+                "max_tikrar": tikrar.max_tikrar,
+                "items": [
+                    {"text": item.text, "url": request.build_absolute_uri(item.audio.url)}
+                    for item in tikrar.items.all()
+                ]
+            }
+
+            manifest_file = ContentFile(json.dumps(data))
+            tikrar.generated_file.save(f"manifest-{tikrar.id}-{tikrar.version + 1}.json", manifest_file)
+            tikrar.version += 1
+            tikrar.save()
