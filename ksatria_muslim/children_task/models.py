@@ -42,7 +42,7 @@ class Tikrar(TimeStampedModel):
     max_tikrar = models.IntegerField(default=3)
 
     # should be increased every file generated
-    version = models.IntegerField(default=1)
+    version = models.IntegerField(default=0)
     generated_file = models.FileField(null=True, blank=True, upload_to="tikrar/")
 
 
