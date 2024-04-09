@@ -19,7 +19,7 @@ class Clockify:
             description=description,
             started_at=entry.started,
             ended_at=entry.ended,
-            duration=entry.duration,
+            duration=entry.duration or None,
             ref_id=entry.entry_id,
             ref_name="clockify"
         )
