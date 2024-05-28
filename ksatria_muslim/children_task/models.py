@@ -1,5 +1,7 @@
 import uuid
 
+from django.contrib.postgres.fields import ArrayField
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from model_utils import Choices
 from model_utils.models import TimeStampedModel
@@ -17,21 +19,25 @@ class Task(TimeStampedModel):
     image = models.ImageField(null=True, blank=True)
     active = models.BooleanField(default=True)
 
-    TYPES = Choices("yesno", "need_verification", "tikrar")
+    TYPES = Choices("yesno", "need_verification")
     type = models.CharField(max_length=255, default=TYPES.yesno, choices=TYPES)
-    detail = models.JSONField(default=dict)
+
+    days = ArrayField(models.IntegerField(validators=[MaxValueValidator(7), MinValueValidator(1)]), default=list)
 
     def __str__(self):
         return self.title
 
 
 class TaskHistory(TimeStampedModel):
-    STATUS = Choices("todo", "pending", "finished")
+    STATUS = Choices("todo", "pending", "finished", "udzur")
 
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     child = models.ForeignKey(Child, on_delete=models.CASCADE)
     status = models.CharField(max_length=100, choices=STATUS, default=STATUS.todo)
+    udzur_reason = models.TextField(null=True, blank=True)
+    photo = models.ImageField(upload_to="task_history/", null=True, blank=True)
+    finished_at = models.DateTimeField(null=True, blank=True)
 
 
 class Tikrar(TimeStampedModel):
