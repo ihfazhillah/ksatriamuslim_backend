@@ -1,35 +1,21 @@
-from django.contrib.auth import get_user_model
 from django.db import models
-from model_utils.models import TimeStampedModel
+from model_utils import Choices
 
 
-class EventOrganizer(models.Model):
+class Event(models.Model):
+    DATE_TYPES = Choices("hijri", "masehi")
+
+    date_type = models.CharField(max_length=20, choices=DATE_TYPES)
+
+    date = models.IntegerField(null=True, blank=True)
+    month = models.IntegerField()
+
     title = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+
+    image = models.ImageField(upload_to="events/")
 
     def __str__(self):
         return self.title
 
 
-class EventPresenter(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
-
-class Event(TimeStampedModel):
-    title = models.CharField(max_length=255)
-    thumbnail = models.ImageField(upload_to="events/")
-    youtube_link = models.TextField(null=True, blank=True)
-    zoom_link = models.TextField(null=True, blank=True)
-
-    presenter = models.ForeignKey(EventPresenter, on_delete=models.CASCADE, related_name="event_presenters")
-
-    submitter = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="submitted_events")
-
-    organizer = models.ForeignKey(EventOrganizer, on_delete=models.CASCADE, related_name="events")
-
-    started_at = models.DateTimeField()
-
-    def __str__(self):
-        return self.title
