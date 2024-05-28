@@ -1,4 +1,5 @@
-from rest_framework import serializers
+from django.utils import timezone
+from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -31,7 +32,7 @@ class ChildSerializer(serializers.ModelSerializer):
         if not tasks:
             return 0.0
 
-        finished_task = [task for task in tasks if task.status == TaskHistory.STATUS.finished]
+        finished_task = [task for task in tasks if task.status in [TaskHistory.STATUS.finished, TaskHistory.STATUS.udzur]]
         return len(finished_task) / len(tasks)
 
 
@@ -72,10 +73,32 @@ def mark_as_finished(request):
     task = get_object_or_404(TaskHistory, id=task_id)
 
     if task.task.need_verification:
+        photo = request.FILES.get("photo")
+        if not photo:
+            return Response({"message": "photo required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        task.photo = photo
+
+    if task.task.need_verification:
         task.status = TaskHistory.STATUS.pending
     else:
         task.status = TaskHistory.STATUS.finished
 
+    task.finished_at = timezone.now()
+
+    task.save()
+    return Response({"task": serialize_task(task, request)})
+
+
+
+@api_view(["POST"])
+def mark_as_udzur(request):
+    task_id = request.data.get("task_id")
+    udzur_reason = request.data.get("udzur_reason")
+    task = get_object_or_404(TaskHistory, id=task_id)
+    task.status = TaskHistory.STATUS.udzur
+    task.udzur_reason = udzur_reason
+    task.finished_at = timezone.now()
     task.save()
     return Response({"task": serialize_task(task, request)})
 

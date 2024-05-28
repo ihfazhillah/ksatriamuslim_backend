@@ -8,6 +8,7 @@ urlpatterns = [
     path("children/", views.get_children, name="get-children"),
     path("children/<child_id>/tasks/", views.get_task_list, name="get-task-list"),
     path("mark-as-finished/", views.mark_as_finished, name="mark-as-finished"),
+    path("mark-as-udzur/", views.mark_as_udzur, name="mark-as-udzur"),
     path("confirm/", views.confirm, name="confirm"),
     path("reset/", views.reset, name="reset"),
 ]
