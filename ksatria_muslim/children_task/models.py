@@ -19,6 +19,7 @@ class Task(TimeStampedModel):
     image = models.ImageField(null=True, blank=True)
     active = models.BooleanField(default=True)
 
+    # not used yet. We may delete it
     TYPES = Choices("yesno", "need_verification")
     type = models.CharField(max_length=255, default=TYPES.yesno, choices=TYPES)
 
