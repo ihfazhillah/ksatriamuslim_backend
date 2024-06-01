@@ -56,7 +56,9 @@ def serialize_task(history: TaskHistory, request=None):
         "id": history.id,
         "title": history.task.title,
         "status": history.status,
-        "image": image_url
+        "image": image_url,
+        "udzur": history.udzur_reason,
+        "time": history.task.scheduled_at.strftime("%H:%M")
     }
 
 
