@@ -28,7 +28,14 @@ class ChildSerializer(serializers.ModelSerializer):
         return url
 
     def get_progress(self, obj: Child):
-        tasks = get_children_tasks(obj.id)
+        # tasks = get_children_tasks(obj.id)
+        today = timezone.localdate()
+        tasks = TaskHistory.objects.filter(
+            child_id=obj.id,
+            task__active=True,
+            task__days__contains=[today.isoweekday()],
+            created__date=today
+        ).order_by("task__scheduled_at", "task__title")
         if not tasks:
             return 0.0
 
