@@ -66,7 +66,8 @@ def serialize_task(history: TaskHistory, request=None):
         "image": image_url,
         "udzur": history.udzur_reason,
         "time": history.task.scheduled_at.strftime("%H:%M"),
-        "need_confirmation": history.task.need_verification
+        "need_confirmation": history.task.need_verification,
+        "created": history.created
     }
 
 
