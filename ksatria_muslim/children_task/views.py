@@ -67,7 +67,10 @@ def serialize_task(history: TaskHistory, request=None):
 def get_task_list(request, child_id):
     today = timezone.localdate()
     tasks = TaskHistory.objects.filter(
-        child_id=child_id, task__active=True, task__days__contains=[today.isoweekday()]
+        child_id=child_id,
+        task__active=True,
+        task__days__contains=[today.isoweekday()],
+        created_at__date=today
     ).order_by("task__scheduled_at", "task__title")
     return Response({"tasks": [serialize_task(task, request) for task in tasks]})
 
