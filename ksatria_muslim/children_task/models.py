@@ -19,10 +19,6 @@ class Task(TimeStampedModel):
     image = models.ImageField(null=True, blank=True)
     active = models.BooleanField(default=True)
 
-    # not used yet. We may delete it
-    TYPES = Choices("yesno", "need_verification")
-    type = models.CharField(max_length=255, default=TYPES.yesno, choices=TYPES)
-
     days = ArrayField(models.IntegerField(validators=[MaxValueValidator(7), MinValueValidator(1)]), default=list)
 
     def __str__(self):
@@ -41,23 +37,3 @@ class TaskHistory(TimeStampedModel):
     finished_at = models.DateTimeField(null=True, blank=True)
 
 
-class Tikrar(TimeStampedModel):
-    """
-    Bank data untuk tikrar
-    """
-    title = models.CharField(max_length=255)
-    max_tikrar = models.IntegerField(default=3)
-
-    # should be increased every file generated
-    version = models.IntegerField(default=0)
-    generated_file = models.FileField(null=True, blank=True, upload_to="tikrar/")
-
-
-class TikrarItem(TimeStampedModel):
-    tikrar = models.ForeignKey(Tikrar, on_delete=models.CASCADE, related_name="items")
-    index = models.IntegerField(default=0)
-    text = models.TextField()
-    audio = models.FileField(upload_to="tikrar-audio/")
-
-    class Meta:
-        ordering = ["index"]
