@@ -6,8 +6,9 @@ from ksatria_muslim.children_task.models import Task, TaskHistory
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ("image_display", "title", "days", "children_display")
+    list_display = ("image_display", "title", "scheduled_at", "days", "children_display")
     list_filter = ("days", "children")
+    ordering = ("scheduled_at", "title")
 
     def image_display(self, obj):
         if obj.image:
