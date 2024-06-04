@@ -59,13 +59,17 @@ def serialize_task(history: TaskHistory, request=None):
         if request:
             image_url = request.build_absolute_uri(image_url)
 
+    time = "Belum Terjadwal"
+    if history.task.scheduled_at:
+        time =  history.task.scheduled_at.strftime("%H:%M")
+
     return {
         "id": history.id,
         "title": history.task.title,
         "status": history.status,
         "image": image_url,
         "udzur": history.udzur_reason,
-        "time": history.task.scheduled_at.strftime("%H:%M"),
+        "time": time,
         "need_confirmation": history.task.need_verification,
         "created": history.created
     }
