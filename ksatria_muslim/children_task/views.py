@@ -1,3 +1,4 @@
+from django.db import models
 from django.utils import timezone
 from rest_framework import serializers, status
 from rest_framework.decorators import api_view
@@ -7,6 +8,11 @@ from rest_framework.response import Response
 from ksatria_muslim.children.models import Child
 from ksatria_muslim.children_task.models import TaskHistory
 from ksatria_muslim.children_task.selectors import get_children_tasks
+
+
+#############################
+# children app related views
+#############################
 
 
 class ChildSerializer(serializers.ModelSerializer):
@@ -77,6 +83,9 @@ def serialize_task(history: TaskHistory, request=None):
 
 @api_view(["GET"])
 def get_task_list(request, child_id):
+    """
+    Used in the children and parent detail
+    """
     today = timezone.localdate()
     tasks = TaskHistory.objects.filter(
         child_id=child_id,
@@ -123,14 +132,101 @@ def mark_as_udzur(request):
     return Response({"task": serialize_task(task, request)})
 
 
+############################
+# parent app related views
+############################
+
+
 @api_view(["POST"])
-def confirm(request):
+def update_status(request):
     task_id = request.data.get("task_id")
     task = get_object_or_404(TaskHistory, id=task_id)
     task.status = TaskHistory.STATUS.finished
     task.save()
 
     return Response({"task": serialize_task(task, request)})
+
+
+@api_view(["GET"])
+def today_parent_dashboard(request):
+    today = timezone.localdate()
+
+    to_review_count = TaskHistory.objects.filter(
+        status=TaskHistory.STATUS.pending,
+        child__parent=request
+    ).count()
+
+    # to optimize: mungkin bisa di check mana yang lebih cepat ->
+    # get data dari tasks kemudian dihitung
+    # atau get data dari anak dengan aggregate
+    children = Child.objects.filter(parent=request.user).order_by("name").annotate(
+        todo_count=models.Count("taskhistory", filter=models.Q(taskhistory__status=TaskHistory.STATUS.todo, created__date=today)),
+        pending_count=models.Count("taskhistory",
+                                filter=models.Q(taskhistory__status=TaskHistory.STATUS.pending, created__date=today)),
+        udzur_count=models.Count("taskhistory",
+                                   filter=models.Q(taskhistory__status=TaskHistory.STATUS.udzur,
+                                                   created__date=today)),
+        finished_count=models.Count("taskhistory",
+                                 filter=models.Q(taskhistory__status=TaskHistory.STATUS.finished,
+                                                 created__date=today)),
+    )
+
+    serialized_children = [
+        {
+            "id": child.id,
+            "photo": request.build_absolute_uri(child.picture.photo.url),
+            "name": child.name,
+            "todo_count": child.todo_count,
+            "udzur_count": child.udzur_count,
+            "pending_count": child.pending_count,
+            "finished_count": child.finished_count,
+        }
+        for child in children
+    ]
+
+    response_data = {
+        "children": serialized_children,
+        "to_review_count": to_review_count
+    }
+
+    return Response(response_data)
+
+
+@api_view(["GET"])
+def to_review_tasks_view(request):
+    to_review_tasks = TaskHistory.objects.filter(
+        status=TaskHistory.STATUS.pending,
+        child__parent=request.user
+    )
+
+    serialized_tasks = [
+        {
+            "id": task.id,
+            "verification_photo": request.build_absolute_uri(task.photo.url),
+            "title": task.task.title,
+            "photo": request.build_absolute_uri(task.task.image.url) if task.task.image else None,
+            "submitted_at": task.updated
+        }
+        for task in to_review_tasks
+    ]
+
+    return Response({"tasks": serialized_tasks})
+
+
+
+@api_view(["POST"])
+def confirm(request):
+    task_id = request.data.get("task_id")
+    task = get_object_or_404(TaskHistory, id=task_id)
+
+    selected_status = request.data.get("status")
+
+    try:
+        task.status = TaskHistory.STATUS[selected_status]
+        task.save()
+        return Response({"task": serialize_task(task, request)})
+    except KeyError:
+        return Response({"error": f"status {selected_status} not found"}, status=400)
 
 
 @api_view(["POST"])
