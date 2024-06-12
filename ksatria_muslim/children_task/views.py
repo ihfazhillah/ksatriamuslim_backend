@@ -153,7 +153,7 @@ def today_parent_dashboard(request):
 
     to_review_count = TaskHistory.objects.filter(
         status=TaskHistory.STATUS.pending,
-        child__parent=request
+        child__parent=request.user
     ).count()
 
     # to optimize: mungkin bisa di check mana yang lebih cepat ->
