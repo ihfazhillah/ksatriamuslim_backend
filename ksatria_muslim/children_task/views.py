@@ -160,15 +160,16 @@ def today_parent_dashboard(request):
     # get data dari tasks kemudian dihitung
     # atau get data dari anak dengan aggregate
     children = Child.objects.filter(parent=request.user).order_by("name").annotate(
-        todo_count=models.Count("taskhistory", filter=models.Q(taskhistory__status=TaskHistory.STATUS.todo, created__date=today)),
+        todo_count=models.Count("taskhistory", filter=models.Q(taskhistory__status=TaskHistory.STATUS.todo,
+                                                               taskhistory__created__date=today)),
         pending_count=models.Count("taskhistory",
-                                filter=models.Q(taskhistory__status=TaskHistory.STATUS.pending, created__date=today)),
+                                filter=models.Q(taskhistory__status=TaskHistory.STATUS.pending, taskhistory__created__date=today)),
         udzur_count=models.Count("taskhistory",
                                    filter=models.Q(taskhistory__status=TaskHistory.STATUS.udzur,
-                                                   created__date=today)),
+                                                   taskhistory__created__date=today)),
         finished_count=models.Count("taskhistory",
                                  filter=models.Q(taskhistory__status=TaskHistory.STATUS.finished,
-                                                 created__date=today)),
+                                                 taskhistory__created__date=today)),
     )
 
     serialized_children = [
