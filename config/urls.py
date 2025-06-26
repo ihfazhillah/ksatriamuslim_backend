@@ -41,12 +41,15 @@ urlpatterns += [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
+    path("sensors/", include("ksatria_muslim.sensors.urls", namespace="sensors")),
     path(
-        "sensors/", include("ksatria_muslim.sensors.urls", namespace="sensors")
+        "invoice/",
+        include("ksatria_muslim.invoice.urls"),
     ),
     path(
-        "invoice/", include("ksatria_muslim.invoice.urls"),
-    )
+        "api/invoice-management/",
+        include("ksatria_muslim.invoice_management.urls"),
+    ),
 ]
 
 if settings.DEBUG:

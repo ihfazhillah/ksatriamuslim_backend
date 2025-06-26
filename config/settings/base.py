@@ -1,6 +1,7 @@
 """
 Base settings to build other settings files upon.
 """
+
 from pathlib import Path
 
 import environ
@@ -87,8 +88,8 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "adminsortable2",
     "dmqtt",
-    'dynamic_preferences',
-    'dynamic_preferences.users.apps.UserPreferencesConfig',
+    "dynamic_preferences",
+    "dynamic_preferences.users.apps.UserPreferencesConfig",
 ]
 
 LOCAL_APPS = [
@@ -105,6 +106,7 @@ LOCAL_APPS = [
     "ksatria_muslim.invoice",
     "ksatria_muslim.children_task",
     "ksatria_muslim.vimflowly",
+    "ksatria_muslim.invoice_management.apps.InvoiceManagementConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -307,11 +309,13 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 # ------------------------------------------------------------------------------
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_AUTHENTICATION_METHOD = "username"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = False
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "none"
+# https://django-allauth.readthedocs.io/en/latest/configuration.html
+ACCOUNT_USERNAME_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_ADAPTER = "ksatria_muslim.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
@@ -331,7 +335,13 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DATETIME_FORMAT": "%Y%m%d%H%M"
+    "DATETIME_FORMAT": "%Y%m%d%H%M",
+}
+
+# django-rest-auth
+# -------------------------------------------------------------------------------
+REST_AUTH_SERIALIZERS = {
+    "LOGIN_SERIALIZER": "rest_auth.serializers.LoginSerializer",
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
