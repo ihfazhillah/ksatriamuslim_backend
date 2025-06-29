@@ -1,4 +1,4 @@
-from adminsortable2.admin import SortableInlineAdminMixin
+from adminsortable2.admin import SortableInlineAdminMixin, SortableAdminBase
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin, TabularInline, StackedInline
 from django.urls import reverse
@@ -13,7 +13,7 @@ class PageInline(SortableInlineAdminMixin, TabularInline):
 
 
 @admin.register(Book)
-class BookAdmin(ModelAdmin):
+class BookAdmin(SortableAdminBase, ModelAdmin):
     list_display = ["title", "cover", "preview_pages", "download_text", "upload_audio_zip"]
     search_fields = ["title"]
     inlines = [PageInline]

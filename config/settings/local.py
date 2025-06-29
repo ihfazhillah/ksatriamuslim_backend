@@ -61,5 +61,19 @@ INSTALLED_APPS += ["django_extensions"]  # noqa F405
 CELERY_TASK_ALWAYS_EAGER = True
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#task-eager-propagates
 CELERY_TASK_EAGER_PROPAGATES = True
+# DATABASE for Development
+# ------------------------------------------------------------------------------
+# Use PostgreSQL for local development
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "ksatriamuslim",
+        "USER": "ksatriamuslim",
+        "PASSWORD": "ksatriamuslim123",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+}
+
 # Your stuff...
 # ------------------------------------------------------------------------------

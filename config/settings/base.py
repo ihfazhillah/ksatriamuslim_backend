@@ -79,16 +79,16 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "rest_auth",
-    "rest_auth.registration",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
     "django_celery_beat",
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
     "drf_spectacular",
     "adminsortable2",
-    "dmqtt",
     "dynamic_preferences",
+    "channels",
     "dynamic_preferences.users.apps.UserPreferencesConfig",
 ]
 
@@ -102,11 +102,11 @@ LOCAL_APPS = [
     "ksatria_muslim.book_tracker.apps.BookTrackerApp",
     "ksatria_muslim.events.apps.EventAppConfig",
     "ksatria_muslim.sensors.apps.SensorsAppConfig",
-    "ksatria_muslim.irrigation.apps.IrrigationAppConfig",
     "ksatria_muslim.invoice",
     "ksatria_muslim.children_task",
     "ksatria_muslim.vimflowly",
     "ksatria_muslim.invoice_management.apps.InvoiceManagementConfig",
+    "ksatria_muslim.kidskanbantask.apps.KidsKanbanTaskConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

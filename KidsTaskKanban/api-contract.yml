@@ -1,0 +1,166 @@
+openapi: 3.0.0
+info:
+  title: "Kids Task Kanban API"
+  description: |
+    API contract for the Kids Task Kanban application.
+    This API provides endpoints for fetching the board state (children and their tasks)
+    and for updating task statuses. It is designed to support an offline-first
+    mobile application.
+  version: "1.0.0"
+
+servers:
+  - url: https://cms.ihfazh.com/api/kanban
+    description: Production Server
+  - url: http://localhost:8000/api/kanban
+    description: Local Development Server
+
+paths:
+  /board:
+    get:
+      summary: "Get Full Board State"
+      description: |
+        Fetches the complete board state, including all children and their assigned tasks.
+        This is the primary endpoint for the client to sync its local state with the server.
+      operationId: getBoardState
+      tags:
+        - Board
+      responses:
+        '200':
+          description: "Successful retrieval of the board state."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardState'
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /tasks/{taskId}:
+    patch:
+      summary: "Update Task Status"
+      description: |
+        Updates a specific task, primarily to mark it as complete or incomplete.
+        The client should send the entire task object with the updated fields.
+        This endpoint is designed for optimistic updates on the client-side.
+      operationId: updateTask
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: "The unique identifier of the task to update."
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        description: "A JSON object containing the fields to update for the task."
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdate'
+      responses:
+        '200':
+          description: "Task updated successfully."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: "Invalid request body."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: "Task not found."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    BoardState:
+      type: object
+      properties:
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChildWithTasks'
+
+    ChildWithTasks:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "child1"
+        name:
+          type: string
+          example: "Budi"
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+
+    Task:
+      type: object
+      required:
+        - id
+        - title
+        - completed
+        - childId
+        - imageUrl
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "task1"
+        title:
+          type: string
+          example: "Merapikan Mainan"
+        completed:
+          type: boolean
+          example: false
+        childId:
+          type: string
+          format: uuid
+          example: "child1"
+        imageUrl:
+          type: string
+          format: uri
+          example: "https://example.com/images/toys.png"
+
+    TaskUpdate:
+      type: object
+      required:
+        - completed
+      properties:
+        completed:
+          type: boolean
+          description: "The new completion status of the task."
+          example: true
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: "not_found"
+        message:
+          type: string
+          example: "The requested resource was not found."
